@@ -222,7 +222,7 @@ By the end of this project, students will be able to:
 
 5.1.1 If the account removal is successful, the system should notify the user that their account has been removed and provide any instructions for new account 
 
-![Use Case Diagram](img/iotCaseDiagram.png)
+![Use Case Diagram](iotCaseDiagram.png)
 
 [https://www.figma.com/file/JdDww9h7dXpK85f1QG3KyN/IOT-Sensor-Monitoring-System-Use-Case-Diagram?node-id=0%3A1&t=8nQQQVcqdf4BIGLo-1](https://www.figma.com/file/JdDww9h7dXpK85f1QG3KyN/IOT-Sensor-Monitoring-System-Use-Case-Diagram?node-id=0%3A1&t=8nQQQVcqdf4BIGLo-1)
 
@@ -234,4 +234,4 @@ The client is someone who’s interested in this particular sub-set of data from
 
  ************************************[https://www.figma.com/file/Mx0OgtIclSJBzjdbk64YCO/User-persona-(Community)?node-id=0%3A1&t=9RtlnmPpxnJlZFb5-1](https://www.figma.com/file/Mx0OgtIclSJBzjdbk64YCO/User-persona-(Community)?node-id=0%3A1&t=9RtlnmPpxnJlZFb5-1)
 
-![Proto Persona](img/iotProtoPersona.png)
+![Proto Persona](iotProtoPersona.png)
