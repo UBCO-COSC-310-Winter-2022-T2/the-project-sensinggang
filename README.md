@@ -333,9 +333,11 @@ Our IoT Sensor Monitoring system is an application that allows users to take adv
 
 2a1. Displays message for invalid connection from broker to IoT device.
 
-![UseCaseDiagram.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0d7e2b4f-190b-4bf4-8107-0be9f6d667b4/UseCaseDiagram.png)
+![UseCaseDiagram.png](iotCaseDiagram.png)
 
 ## Proto-personas:
+
+![ProtoPersona.png](iotProtoPersona.png)
 
 ### Client:
 
