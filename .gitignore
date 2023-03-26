@@ -5,3 +5,4 @@ venv.bak/
 .env
 .venv
 env/
+_pycahce_/
