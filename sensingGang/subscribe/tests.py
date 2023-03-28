@@ -2,8 +2,11 @@ import unittest
 from django.test import TestCase
 import paho.mqtt.client as mqtt
 from unittest import TestCase, mock
+from subscribe.mqtt_client import MyMQTTClient
 
 client = mqtt.Client("test_client")
+mqttBroker = "mqtt.eclipseprojects.io"
+mqtt_client = MyMQTTClient("test_client")
 
 # Create your tests here.
 class MyTestCase(unittest.TestCase):
@@ -11,35 +14,25 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(1 + 1, 5)
         
     def test_connection(self):
-        
+        client.connect(mqttBroker)
         # Call is_conected() built in function that returns t/f
         self.assertEqual(client.is_connected(), True)
         
     def test_disconnect(self):
-         self.assertEqual(client.is_connected(), True)
+        client.disconnect()
+        self.assertEqual(client.is_connected(), False)
  
     def test_subscribe(self):
         # Define the expected arguments
-        topic = 'mytopic'
-        qos = 0
-        client.subscribe(topic, qos)
-        self.assertEqual(client.is_subscribed(topic), False)
-        # mock_subscribe = mock.MagicMock()
-        # client.subscribe = mock_subscribe
-        
-        #  # Call the subscribe function with the expected arguments
-        # client.subscribe(topic, qos)
-
-        # # Assert that the MQTT client's subscribe method was called with the expected arguments
-        # mock_subscribe.assert_called_once_with(topic, qos)
+        topic = 'test_topic'
+        mqtt_client.subscribe(topic)
+        self.assertEqual(mqtt_client.is_subscribed, True)
         
     def test_publish(self):
-        received_message = 1
-        expected_message = 2
-        self.assertEqual(received_message, expected_message)
+        self.assertEqual(1,2)
         
     def test_unsubscribe(self):
         topic = "test_topic"
-        client.subscribe(topic)
-        client.is_subscribed("topic")
-        self.assertEqual(client.is_subscribed(topic), False)
+        mqtt_client.subscribe(topic)
+        mqtt_client.unsubscribe(topic)
+        self.assertEqual(mqtt_client.is_subscribed, False)
