@@ -22,15 +22,16 @@ class MyTestCase(unittest.TestCase):
         # Define the expected arguments
         topic = 'mytopic'
         qos = 0
-        
-        mock_subscribe = mock.MagicMock()
-        client.subscribe = mock_subscribe
-        
-         # Call the subscribe function with the expected arguments
         client.subscribe(topic, qos)
+        self.assertEqual(client.is_subscribed(topic), False)
+        # mock_subscribe = mock.MagicMock()
+        # client.subscribe = mock_subscribe
+        
+        #  # Call the subscribe function with the expected arguments
+        # client.subscribe(topic, qos)
 
-        # Assert that the MQTT client's subscribe method was called with the expected arguments
-        mock_subscribe.assert_called_once_with(topic, qos)
+        # # Assert that the MQTT client's subscribe method was called with the expected arguments
+        # mock_subscribe.assert_called_once_with(topic, qos)
         
     def test_publish(self):
         received_message = 1
