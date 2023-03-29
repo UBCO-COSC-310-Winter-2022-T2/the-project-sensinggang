@@ -4,7 +4,7 @@ import paho.mqtt.client as mqtt
 from unittest import TestCase, mock
 from subscribe.mqtt_client import MyMQTTClient
 
-client = mqtt.Client("test_client")
+client = mqtt.Client("test_client2")
 mqttBroker = "mqtt.eclipseprojects.io"
 mqtt_client = MyMQTTClient("test_client")
 
@@ -36,3 +36,25 @@ class MyTestCase(unittest.TestCase):
         mqtt_client.subscribe(topic)
         mqtt_client.unsubscribe(topic)
         self.assertEqual(mqtt_client.is_subscribed, False)
+        
+    # test for unsubscribe without altering paho method
+    def test_unsubscribe2(self):
+        mqttBroker = "mqtt.eclipseprojects.io"
+        client = mqtt.Client("test_client")
+        client.connect(mqttBroker)
+        topic = 'test_topic'
+        # unsubscribe() returns a tuple (result, mid) where result determines success of connection. 0 for success, 1-4 for errors
+        # mid = message id
+        (result, mid) = client.unsubscribe(topic)
+        assert(result == 0)
+    
+    # test for subscribe() withouth altering paho method
+    def test_subscribe2(self):
+        mqttBroker = "mqtt.eclipseprojects.io"
+        client = mqtt.Client("test_client")
+        client.connect(mqttBroker)
+        topic = 'test_topic'
+        # subscribe() returns a tuple (result, mid) where result determines success of connection. 0 for success, 1-4 for errors
+        # mid = message id
+        (result, mid) = client.subscribe(topic)
+        assert(result == 0)
