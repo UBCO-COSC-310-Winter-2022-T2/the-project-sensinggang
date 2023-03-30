@@ -11,4 +11,3 @@ class MyTestCase(unittest.TestCase):
 # Ensure that the client can connect to the broker and establish a stable connection
     def test_connectivity(self):        
         self.assertEqual(client.is_connected(), True)
-
