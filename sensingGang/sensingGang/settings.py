@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "home",
+    "homePage",
 ]
 
 MIDDLEWARE = [
@@ -55,7 +55,10 @@ ROOT_URLCONF = "sensingGang.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            'templates',
+            'sensingGang/homePage/templates',
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
