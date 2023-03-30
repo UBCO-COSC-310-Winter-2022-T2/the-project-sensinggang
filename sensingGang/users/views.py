@@ -64,7 +64,7 @@ def signin(request):
             firstname = user.first_name
             return render(request, "users/home.html", {'firstname': firstname})
         else:
-           # messages.error(request, "Username or password is incorrect")
+            messages.error(request, "Username or password is incorrect")
             return redirect('signin')   
     
     return render(request, "users/signin.html")

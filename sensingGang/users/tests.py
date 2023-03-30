@@ -37,12 +37,15 @@ class AccountCreationTestCases(TestCase):
     # User setup
     def setUp(self):
         self.client = Client()
-        self.username = 'testuser2'
+        self.username = 'testuser'
+        self.firstname = 'firstname'
+        self.lastname = 'lastname'
+        self.email = 'email@gmail.com'
         self.password = 'password'
-        self.create_account_url = reverse('signin')
+        self.create_account_url = reverse('signup')
         
     def test_valid_account_creation(self):
-        response = self.client.post(self.create_account_url, {'username': self.username , 'password': self.password, 'confirmPassword': self.password}, follow=True)
+        response = self.client.post(self.create_account_url, {'username': self.username , 'firstname': self.username ,'lastname': self.username ,'email': self.username ,'password': self.password, 'confirmPassword': self.password}, follow=True)
         # Checks for valid redirect to main page
         self.assertRedirects(response, reverse('signin'), status_code=302, target_status_code=200)
         # Verify that the user was created and can log in.
@@ -50,7 +53,7 @@ class AccountCreationTestCases(TestCase):
         self.assertIsNotNone(User.objects.get(username=self.username).pk)
     
     def test_matching_passwords(self):
-        response = self.client.post(self.create_account_url, {'username': self.username, 'password': self.password, 'confirmPassword': 'difPassword'}, follow = True)
+        response = self.client.post(self.create_account_url, {'username': self.username , 'firstname': self.username ,'lastname': self.username ,'email': self.username ,'password': self.password, 'confirmPassword': 'difPassword'}, follow = True)
         # Check for correct message for unmatching passwords
         messages = list(response.context.get('messages'))
         self.assertEqual(len(messages), 1)
@@ -59,10 +62,20 @@ class AccountCreationTestCases(TestCase):
         self.assertEqual(User.objects.count(), 0)
         
     def test_empty_fields(self):
-        response = self.client.post(self.create_account_url, {'username': '', 'password': '', 'confirmPassword': ''}, follow=True)
+        response = self.client.post(self.create_account_url, {'username': '',  'firstname': '', 'lastname': '', 'email': '', 'password': '', 'confirmPassword': ''}, follow=True)
         # Check for correct message for empty fields
         messages = list(response.context.get('messages'))
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), "Fields cannot be empty")
         # Check if not user object was created
         self.assertEqual(User.objects.count(), 0)
+        
+    def test_alpha_numeric_username(self):
+        response = self.client.post(self.create_account_url, {'username': '#%*@!' , 'firstname': self.username ,'lastname': self.username ,'email': self.username ,'password': self.password, 'confirmPassword': self.password}, follow = True)
+        # Check for correct message for unmatching passwords
+        messages = list(response.context.get('messages'))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Username must be Alpha-Numeric")
+        # Check if not user object was created
+        self.assertEqual(User.objects.count(), 0)
+        
