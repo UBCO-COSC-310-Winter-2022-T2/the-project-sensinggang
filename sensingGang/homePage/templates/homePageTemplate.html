@@ -1,11 +1,13 @@
 <!-- the homePage template extends the masterTemplate, which includes the navbar-->
 {% extends "./masterTemplate.html" %}
 
+{% load static %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'homePageTemplate.css' %}">
+{% endblock %}
+
 {% block content %}
 <body>
-<div class="header">
-    <h1>Sensing Gang</h1>
-</div>
 
 <div class="main">
 <div class="item">

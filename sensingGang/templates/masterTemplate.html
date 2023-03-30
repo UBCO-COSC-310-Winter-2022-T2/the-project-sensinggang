@@ -5,9 +5,12 @@
     <meta name-="viewport" content="width=device-width, initial-scale=1"> 
     <title>Sensing Gang Home Page</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'homePageTemplate.css' %}">
+    <link rel="stylesheet" href="{% static '/masterStyle.css' %}">
+    {% block style %}
+    {% endblock style%}
 </head>
 <body>
+    <h1>Sensing what</h1>
     <nav>
         <!-- add buttons here -->
     </nav>
