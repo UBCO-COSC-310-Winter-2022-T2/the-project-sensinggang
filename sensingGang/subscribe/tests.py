@@ -27,9 +27,15 @@ class MyTestCase(unittest.TestCase):
         topic = 'test_topic'
         mqtt_client.subscribe(topic)
         self.assertEqual(mqtt_client.is_subscribed, True)
-        
+    
+    # test for publish
     def test_publish(self):
-        self.assertEqual(1,2)
+        mqttBroker = "mqtt.eclipseprojects.io"
+        client = mqtt.Client("test_client")
+        client.connect(mqttBroker)
+        (result, mid) = client.publish("topic", 0)
+        self.assertEqual(result,0)
+       
         
     def test_unsubscribe(self):
         topic = "test_topic"
@@ -58,3 +64,7 @@ class MyTestCase(unittest.TestCase):
         # mid = message id
         (result, mid) = client.subscribe(topic)
         assert(result == 0)
+        
+    def test_on_message(self):
+        message = ""
+        assert(message=="hello")
