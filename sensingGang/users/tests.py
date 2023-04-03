@@ -45,15 +45,33 @@ class AccountCreationTestCases(TestCase):
         self.create_account_url = reverse('signup')
         
     def test_valid_account_creation(self):
-        response = self.client.post(self.create_account_url, {'username': self.username , 'firstname': self.username ,'lastname': self.username ,'email': self.username ,'password': self.password, 'confirmPassword': self.password}, follow=True)
+        response = self.client.post(self.create_account_url, {'username': self.username , 'firstname': self.firstname ,'lastname': self.lastname ,'email': self.email ,'password': self.password, 'confirmPassword': self.password}, follow=True)
         # Checks for valid redirect to main page
         self.assertRedirects(response, reverse('signin'), status_code=302, target_status_code=200)
         # Verify that the user was created and can log in.
         self.assertEqual(User.objects.count(), 1)
         self.assertIsNotNone(User.objects.get(username=self.username).pk)
+        
+    def test_duplicate_username(self):
+        response = self.client.post(self.create_account_url, {'username': self.username , 'firstname': self.firstname ,'lastname': self.lastname ,'email': self.email ,'password': self.password, 'confirmPassword': self.password}, follow=True)
+        response = self.client.post(self.create_account_url, {'username': self.username , 'firstname': self.firstname ,'lastname': self.lastname ,'email': 'difemail@gmail.com' ,'password': self.password, 'confirmPassword': self.password}, follow=True)
+        messages = list(response.context.get('messages'))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Username already in use")
+        # Check if not user object was created
+        self.assertEqual(User.objects.count(), 1)
+        
+    def test_duplicate_email(self):
+        response = self.client.post(self.create_account_url, {'username': self.username , 'firstname': self.firstname ,'lastname': self.lastname ,'email': self.email ,'password': self.password, 'confirmPassword': self.password}, follow=True)
+        response = self.client.post(self.create_account_url, {'username': 'difusername' , 'firstname': self.firstname ,'lastname': self.lastname ,'email': self.email ,'password': self.password, 'confirmPassword': self.password}, follow=True)
+        messages = list(response.context.get('messages'))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Email already in use")
+        # Check if not user object was created
+        self.assertEqual(User.objects.count(), 1)   
     
     def test_matching_passwords(self):
-        response = self.client.post(self.create_account_url, {'username': self.username , 'firstname': self.username ,'lastname': self.username ,'email': self.username ,'password': self.password, 'confirmPassword': 'difPassword'}, follow = True)
+        response = self.client.post(self.create_account_url, {'username': self.username , 'firstname': self.firstname ,'lastname': self.lastname ,'email': self.email ,'password': self.password, 'confirmPassword': 'difPassword'}, follow=True)
         # Check for correct message for unmatching passwords
         messages = list(response.context.get('messages'))
         self.assertEqual(len(messages), 1)
@@ -71,7 +89,7 @@ class AccountCreationTestCases(TestCase):
         self.assertEqual(User.objects.count(), 0)
         
     def test_alpha_numeric_username(self):
-        response = self.client.post(self.create_account_url, {'username': '#%*@!' , 'firstname': self.username ,'lastname': self.username ,'email': self.username ,'password': self.password, 'confirmPassword': self.password}, follow = True)
+        response = self.client.post(self.create_account_url, {'username': '#%*@!' , 'firstname': self.firstname ,'lastname': self.lastname ,'email': self.email ,'password': self.password, 'confirmPassword': self.password}, follow = True)
         # Check for correct message for unmatching passwords
         messages = list(response.context.get('messages'))
         self.assertEqual(len(messages), 1)
