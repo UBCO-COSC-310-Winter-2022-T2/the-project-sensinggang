@@ -29,6 +29,11 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# users will be redirected to the home page after login
+
+LOGIN_REDIRECT_URL = "main"
+LOGOUT_REDIRECT_URL = "main"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,8 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "homePage",
     "home",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -57,9 +62,7 @@ ROOT_URLCONF = "sensingGang.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            os.path.join(BASE_DIR, 'templates')
-        ],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -121,13 +124,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-    'static',
-    'homePage/static'
-
-]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
