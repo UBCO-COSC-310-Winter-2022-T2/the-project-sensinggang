@@ -2,7 +2,7 @@ import unittest
 from django.test import TestCase,Client
 import paho.mqtt.client as mqtt
 from unittest import TestCase, mock
-#from subscribe.mqtt_client import on_message
+from subscribe.mqtt_client import *
 import time
 
 

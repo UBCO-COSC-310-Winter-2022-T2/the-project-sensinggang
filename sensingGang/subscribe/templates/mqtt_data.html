@@ -1,0 +1,9 @@
+
+{% block content %}
+<h1>MQTT Data</h1>
+<ul>
+    {% for message in mqtt_data %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

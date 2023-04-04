@@ -2,12 +2,19 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import paho.mqtt.client as mqtt
 from django.contrib import messages
+from .mqtt import mqtt_data_list # import the mqtt_data list from mqtt.py
 
 # def subscribe(request):
 #     return HttpResponse("Hello world!")
-mqttBroker = "mqtt.eclipseprojects.io"
-client = mqtt.Client("username")
-client.connect(mqttBroker)
+# mqttBroker = "mqtt.eclipseprojects.io"
+# client = mqtt.Client("username")
+# client.connect(mqttBroker)
+mqtt_data_list
+def mqtt_data(request):
+    # Retrieve the MQTT data and store it in a variable
+    mqtt_data_list = []
+    # Render the data in a template
+    return render(request, 'mqtt_data.html', {'mqtt_data': mqtt_data_list})
 
 def subscribe(request):
     return render(request, "subscribe.html")
@@ -24,6 +31,9 @@ def on_message(client, userdata, message):
     print("message retain flag=",message.retain)
 
 def subscribeClient(request):
+    mqttBroker = "mqtt.eclipseprojects.io"
+    client = mqtt.Client("username")
+    client.connect(mqttBroker)
     data= ""
     #verifying post request method
     if request.method == "POST":
@@ -63,4 +73,4 @@ def subscribeClient(request):
             messages.success(request, "Your have successfully subscribe to: " + sensors + data)
             return redirect('subscribe')
 
-    return render(request, "subscribe.html")
+    return render(request, "mqtt_data.html")
