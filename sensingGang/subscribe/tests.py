@@ -1,25 +1,17 @@
 import unittest
-from django.test import TestCase
+from django.test import TestCase,Client
 import paho.mqtt.client as mqtt
 from unittest import TestCase, mock
 #from subscribe.mqtt_client import on_message
 import time
+
 
 client = mqtt.Client("test_client2")
 mqttBroker = "mqtt.eclipseprojects.io"
 # mqtt_client = MyMQTTClient("test_client")
 
 # Create your tests here.
-class MyTestCase(unittest.TestCase):
-    def test_connection(self):
-        client.connect(mqttBroker)
-        # Call is_conected() built in function that returns t/f
-        self.assertEqual(client.is_connected(), True)
-        
-    def test_disconnect(self):
-        client.disconnect()
-        self.assertEqual(client.is_connected(), False)
- 
+class MyTestCase(TestCase):
     # def test_subscribe(self):
     #     # Define the expected arguments
     #     topic = 'test_topic'
@@ -67,3 +59,30 @@ class MyTestCase(unittest.TestCase):
     def test_on_message(self):
         message = ""
         assert(message=="hello")
+        
+    def test_sensor_list(self):
+        self.client = Client()
+        response = self.client.get('/sensorList')
+        self.assertEqual(response.status_code, 200)
+        
+    def test_subscribe_client(self):
+        self.client = Client()
+        response = self.client.get('/subscribeClient')
+        self.assertEqual(response.status_code, 200)
+    
+    def test_disconnect(self):
+        mqttBroker = "mqtt.eclipseprojects.io"
+        client = mqtt.Client("test_client")
+        client.connect(mqttBroker)
+        client.disconnect()
+        self.assertEqual(client.is_connected(), False)
+        
+    def test_connect(self):
+        mqttBroker = "mqtt.eclipseprojects.io"
+        client = mqtt.Client("test_client")
+        client.connect(mqttBroker)
+        client.loop_start()  # start the network loop
+        time.sleep(1)        # wait for the client to establish a connection
+        self.assertTrue(client.is_connected())  # assert that the client is connected
+        client.loop_stop()   
+          

@@ -1,9 +1,12 @@
 import paho.mqtt.client as mqtt
 import time
 
+data="empty"
+
 def on_message(client, userdata, message):
+    global data
     data = str(message.payload.decode("utf-8"))
-    dataArray = [data]
+    # print("message received " ,str(message.payload.decode("utf-8")))
     print("message received " ,data)
     print("message topic=",message.topic)
     print("message qos=",message.qos)
@@ -22,6 +25,7 @@ print("Subscribing to topic","house/bulbs/bulb1")
 client.subscribe("house/bulbs/bulb1")
 print("Publishing message to topic","house/bulbs/bulb1")
 client.publish("house/bulbs/bulb1","test")
+print("data", data)
 client.publish("house/bulbs/bulb1","off")
 client.publish("house/bulbs/bulb1","on")
 time.sleep(4) # wait

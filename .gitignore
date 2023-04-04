@@ -7,3 +7,4 @@ venv.bak/
 env/
 __pycahce__/
 .pyc
+db.sqlite3
