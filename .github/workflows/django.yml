@@ -21,6 +21,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        pip install django
     - name: Run Tests
       working-directory: sensingGang
       run: |
