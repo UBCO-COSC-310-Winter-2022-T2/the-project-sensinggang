@@ -21,7 +21,7 @@ is_sub_s3 = False
 
 def mqtt_data(request):
     # Render the data in a template
-    return render(request, 'mqtt_data.html', {'mqtt_data_list1': mqtt_data_list1,'mqtt_data_list2': mqtt_data_list2,'mqtt_data_list3': mqtt_data_list3})
+    return render(request, 'mqtt_data.html', {'mqtt_data_list1': mqtt_data_list1,'mqtt_data_list2': mqtt_data_list2,'mqtt_data_list3': mqtt_data_list3, 'is_sub_s1':is_sub_s1,'is_sub_s2':is_sub_s2,'is_sub_s3':is_sub_s3})
 
 def subscribe(request):
     return render(request, "subscribe.html")
@@ -140,14 +140,23 @@ def subscribeClient(request):
             # subscribe to sensors object and saving it
             sensors = ""
             if(len(sensor1)!=0):
-                is_sub_s1 = True
+                global is_sub_s1
+                is_sub_s1= True
                 sensors = sensors + " " + sensor1
+            else:
+                is_sub_s1=False
             if(len(sensor2)!=0):
+                global is_sub_s2 
                 is_sub_s2 = True
                 sensors = sensors + " " + sensor2
+            else:
+                is_sub_s2=False
             if(len(sensor3)!=0):
-                is_sub_s3 = True
+                global is_sub_s3 
+                is_sub_s3= True
                 sensors = sensors + " " + sensor3
+            else:
+                is_sub_s3=False
                 
 
             # message for successful account creation
