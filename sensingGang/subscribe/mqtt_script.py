@@ -3,15 +3,17 @@ import time
 from queue import Queue
 
 mqtt_data_list = [] # define the list to store the MQTT data
+received_messages = [] # define the list to store the MQTT data
 q = Queue()
 
 def on_message(client, userdata, message):
     q.put(message)
     mqtt_data_list.append(message.payload.decode("utf-8"))
-    # print("message received " ,str(message.payload.decode("utf-8")))
-    # print("message topic=",message.topic)
-    # print("message qos=",message.qos)
-    # print("message retain flag=",message.retain)
+    received_messages.append(message)
+    print("message received " ,str(message.payload.decode("utf-8")))
+    print("message topic=",message.topic)
+    print("message qos=",message.qos)
+    print("message retain flag=",message.retain)
     
 def on_connect(client, userdata, flags, rc):
     if rc==0:
@@ -57,11 +59,11 @@ print("Publishing message to topic","house/bulbs/bulb1")
 client.publish("house/bulbs/bulb1","test")  #publish to topic
 client.publish("house/bulbs/bulb1","off")
 client.publish("house/bulbs/bulb1","on")
+time.sleep(4) #wait
+client.loop_stop() #stop the loop
+client.disconnect()
 while not q.empty():                        #while loop to print received messages using queue, global scope
    message = q.get()
    if message is None:
        continue
    print("received from queue",str(message.payload.decode("utf-8")))
-time.sleep(4) # wait
-client.loop_stop() #stop the loop
-client.disconnect()

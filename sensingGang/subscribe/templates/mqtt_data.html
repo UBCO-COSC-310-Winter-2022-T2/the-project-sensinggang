@@ -2,7 +2,21 @@
 {% block content %}
 <h1>MQTT Data</h1>
 <ul>
-    {% for message in mqtt_data %}
+    
+    <h4>Sensor 1</h4>
+    {% for message in mqtt_data_list1 %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+<ul>
+    <h4>Sensor 2</h4>
+    {% for message in mqtt_data_list2 %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+<ul>
+    <h4>Sensor 3</h4>
+    {% for message in mqtt_data_list3 %}
     <li>{{ message }}</li>
     {% endfor %}
 </ul>
