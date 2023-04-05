@@ -30,6 +30,7 @@ Our expectation was that this checkpoint would be the most difficult; setting up
 - Established a Kanban board using GitHub Issues
 - Established a workflow posting and completing issues on the GitHub Issues board
 - Set up CI pipeline using GitHub actions
+- Set up docker for local deployment
 
 ### CI/Testing:
 
@@ -37,11 +38,16 @@ Up to date so far, we have been creating individual unit tests within all of our
 
 ### Dockerization:
 
-We have done research into dockerization of our application and plan to use it for deployment. Some of the defined steps are:
+We integrated basic dockerization of our application. It is currently able to deploy on a localhost however we plan tp further this to an Apache server deployment later down the line (Currently only on CI branch):
 
-1. Create a Dockerfile that specifies the environment for our application, such as the base image, the required dependencies, and any additional configuration. 
-2. Use docker-compose to define the services and networking for our application, including the Django apps and the database. 
-3. Use Docker containers to run application in a self-contained environment, with all the dependencies and configuration in one place.
+1. Created a Dockerfile that specifies the environment for our application, such as the base image, the required dependencies, and any additional configuration. 
+2. Use Docker containers to run application in a self-contained environment, with all the dependencies and configuration in one place.
+
+Steps to run:
+1. navigate to sensingGang project directory
+2. Build docker image using command(dont forget the . at the end): docker build -t sensingimage .
+3. run container using docker run -p 8000:8000 sensingimage
+4. enter url: http://localhost:8000
 
 # *Checkpoint 1:*
 
