@@ -1,6 +1,9 @@
 from django.template import loader
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
 def sensingGang(request):
-    template = loader.get_template('masterTemplate.html')
-    return HttpResponse(template.render())
+    return render(request, "homePage/homePage.html")
+
+def homePage(request):
+    return redirect('homePage')
