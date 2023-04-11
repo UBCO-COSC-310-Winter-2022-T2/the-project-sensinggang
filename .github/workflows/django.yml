@@ -27,4 +27,4 @@ jobs:
     - name: Run Tests
       working-directory: sensingGang
       run: |
-        python manage.py test users
+        python manage.py test
