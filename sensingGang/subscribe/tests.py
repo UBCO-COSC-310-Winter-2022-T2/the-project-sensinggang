@@ -2,7 +2,7 @@ import unittest
 from django.test import TestCase,Client
 import paho.mqtt.client as mqtt
 from unittest import TestCase, mock
-from subscribe.mqtt_client import *
+from subscribe.mqtt_script import *
 import time
 
 
@@ -56,16 +56,12 @@ class MyTestCase(TestCase):
         (result, mid) = client.subscribe(topic)
         assert(result == 0)
         
-    def test_on_message(self):
-        message = ""
-        assert(message=="hello")
-        
     def test_sensor_list(self):
         self.client = Client()
         response = self.client.get('/sensorList')
         self.assertEqual(response.status_code, 200)
         
-    def test_subscribe_client(self):
+    def test_subscribeClient(self):
         self.client = Client()
         response = self.client.get('/subscribeClient')
         self.assertEqual(response.status_code, 200)

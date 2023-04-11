@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import paho.mqtt.client as mqtt
 from django.contrib import messages
-from .mqtt_script import mqtt_data_list # import the mqtt_data list from mqtt.py
-import time
+#from .mqtt_script import mqtt_data_list # import the mqtt_data list from mqtt.py
+import time, datetime
 from queue import Queue
 from random import randrange, uniform
+from .models import Sensors, DataEntries, Entry
+from django.template import loader
 
 #variables to transfer data
 mqtt_data_list1 = [] # define the list to store the MQTT data sensor 1
@@ -14,7 +16,8 @@ mqtt_data_list3 = [] # define the list to store the MQTT data sensor 3
 received_messages = [] # define the list to store the MQTT data
 q = Queue()
 
-#flags for "subsctions" and displaying data
+
+#flags for "subscriptions" and displaying data
 is_sub_s1 = False
 is_sub_s2 = False
 is_sub_s3 = False
@@ -42,7 +45,10 @@ def on_message(client, userdata, message):
             if(message.topic=="sensor3"):
                  mqtt_data_list3.append(message.payload.decode("utf-8"))
     
-    mqtt_data_list.append(message.payload.decode("utf-8"))
+    # create a new entry in the Entry model with the received messaged and the current time
+    entry = Entry(topic=message.topic, data=message.payload, pub_date=datetime.datetime.now())
+    entry.save()
+    
     print("message received " ,str(message.payload.decode("utf-8")))
     print("message topic=",message.topic)
     print("message qos=",message.qos)
@@ -67,13 +73,16 @@ def on_disconnect(client, userdata, flags, rc=0):
     print("Disconnected result code ", str(rc))
 
 # script to test methods
-#instantiate client and broker
+#instantiate client and broker and sensor model
 print("creating new instance")
 broker_address = "mqtt.eclipseprojects.io"  #online broker
-client = mqtt.Client("P1") #create new instance
+client = mqtt.Client(client_id="admin") #create new instance
+# admin = Sensors(name=client)
+# admin.save()
+
 
 #attach callback functions:
-client.on_message=on_message        #attach function to callback
+client.on_message=on_message        #attach on message function to callback
 client.on_connect=on_connect        #attach function to callback
 client.on_log=on_log                #attack function to callback
 client.on_disconnect=on_disconnect  #attach disconnect callback
@@ -86,11 +95,12 @@ print("connecting to broker")
 client.connect(broker_address)              #connect to broker
 client.loop_start()                         #start the loop
 time.sleep(4)                               #give client time to establish connection
-print("Subscribing to topic","house/bulbs/bulb1")
+
 #make client subscriptions
 client.subscribe("sensor1")       #subscribe to topic *MUST BE SUBSCRIBED BEFORE PUBLISH TO RECEIVE MESSAGE*
 client.subscribe("sensor2") 
 client.subscribe("sensor3") 
+
 #publish data sensor data (mock)
 print("Publishing message to topic","house/bulbs/bulb1")
 client.publish("sensor1","s1-1")  #publish to topic sensor1
@@ -164,3 +174,11 @@ def subscribeClient(request):
             return redirect('subscribe')
 
     return render(request, "mqtt_data.html")
+
+def data_display_test(request):
+  entries = Entry.objects.all().values()
+  template = loader.get_template('data_display_test.html')
+  context = {
+    'entries': entries,
+  }
+  return HttpResponse(template.render(context, request))
