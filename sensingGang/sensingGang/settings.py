@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-66(4oed&afzb)83yn%$9c4kj$4w!zzmo1j-r^fda+*l2r)3#0b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0']
 
 
 # users will be redirected to the home page after login
@@ -90,6 +90,8 @@ DATABASES = {
     }
 }
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
