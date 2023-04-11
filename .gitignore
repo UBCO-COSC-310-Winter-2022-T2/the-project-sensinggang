@@ -7,3 +7,4 @@ venv.bak/
 env/
 _pycahce_/
 db.sqlite3
+requirements.txt
