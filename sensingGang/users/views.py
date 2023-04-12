@@ -61,8 +61,7 @@ def signin(request):
         
         if user is not None:
             login(request, user)
-            firstname = user.first_name
-            return render(request, "masterTemplate.html", {'firstname': firstname})
+            return redirect('home')
         else:
             messages.error(request, "Username or password is incorrect")
             return redirect('signin')   
