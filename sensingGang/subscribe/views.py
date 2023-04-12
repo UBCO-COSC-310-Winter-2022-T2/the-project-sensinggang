@@ -16,7 +16,6 @@ mqtt_data_list3 = [] # define the list to store the MQTT data sensor 3
 received_messages = [] # define the list to store the MQTT data
 q = Queue()
 
-
 #flags for "subscriptions" and displaying data
 is_sub_s1 = False
 is_sub_s2 = False
@@ -33,7 +32,7 @@ def sensorList(request):
     return render(request, "sensorList.html")
 
 #on_message is callback function for receiving data as a subscriber
-#could implement database inserts in this function
+#stores data in data structures and database
 def on_message(client, userdata, message):
     q.put(message)
     if(message.topic=="sensor1"):
@@ -46,19 +45,38 @@ def on_message(client, userdata, message):
                  mqtt_data_list3.append(message.payload.decode("utf-8"))
     
     # create a new entry in the Entry model with the received messaged and the current time
-    entry = Entry(topic=message.topic, data=message.payload, pub_date=datetime.datetime.now())
+    entry = Entry(topic=message.topic, data=message.payload.decode(), pub_date=datetime.datetime.now())
     entry.save()
     
     print("message received " ,str(message.payload.decode("utf-8")))
     print("message topic=",message.topic)
     print("message qos=",message.qos)
     print("message retain flag=",message.retain)
+
+def init_client(client_name):
+    client = mqtt.Client(client_id=client_name) #create new client instance
+    # admin = Sensors(name=client)
+    # admin.save()
     
+    #attach callback functions:
+    client.on_message=on_message        #attach on message function to callback
+    client.on_connect=on_connect        #attach on_connect function to callback
+    client.on_log=on_log                #attack on_log function to callback
+    client.on_disconnect=on_disconnect  #attach disconnect callback
+    client.on_subscribe=on_subscribe    #attach subscribe callback
+    client.on_publish=on_publish        #attach publish callback
+    return client
+  
 def on_connect(client, userdata, flags, rc):
     if rc==0:
         print("good connection, rc=", rc)
     else:
         print("Bad connection, returned code:", rc)
+        
+    #subcribe to topics when connected
+    client.subscribe("sensor1")       #subscribe to topic *MUST BE SUBSCRIBED BEFORE PUBLISH TO RECEIVE MESSAGE*
+    client.subscribe("sensor2") 
+    client.subscribe("sensor3") 
     
 def on_log(client, userdata, level, buf):
     print("log: ",buf)
@@ -72,61 +90,39 @@ def on_subscribe(client, userdata, mid, granted_qos):
 def on_disconnect(client, userdata, flags, rc=0):
     print("Disconnected result code ", str(rc))
 
-# script to test methods
-#instantiate client and broker and sensor model
-print("creating new instance")
-broker_address = "mqtt.eclipseprojects.io"  #online broker
-client = mqtt.Client(client_id="admin") #create new instance
-# admin = Sensors(name=client)
-# admin.save()
+# generate_data method is used to set up our client and generate the data
+def generate_data():
+    #instantiate client and broker and sensor model
+    print("creating new instance")
+    broker_address = "mqtt.eclipseprojects.io"  #online broker
+    client = init_client("admin")
+   
+    #connect, loop, publish, display results
+    #note that callback functions are asynchronous on anoter thread so the order may not always appear logical (in logs)
+    print("connecting to broker")
+    client.connect(broker_address)              #connect to broker
+    client.loop_start()                         #start the loop
+    time.sleep(4)                               #give client time to establish connection
 
+    #publish data sensor data (mock) - use loop to randomly generate data in lieu of being connected to real data generating sensors
+    print("Publishing messages to topics")
+    count=0
+    while count<10:
+        randNumber3 = uniform(20.0, 21.0)
+        randNumber2 = uniform(10.0, 15.0)
+        randNumber1 = uniform(0.0, 5.0)
+        client.publish("sensor1", randNumber1)
+        client.publish("sensor2", randNumber2)
+        client.publish("sensor3", randNumber3)
+        time.sleep(1)
+        count = count +1
 
-#attach callback functions:
-client.on_message=on_message        #attach on message function to callback
-client.on_connect=on_connect        #attach function to callback
-client.on_log=on_log                #attack function to callback
-client.on_disconnect=on_disconnect  #attach disconnect callback
-client.on_subscribe=on_subscribe    #attach subscribe callback
-client.on_publish=on_publish        #attach publish callback
+    #stop the loop and disconnect client
+    time.sleep(4) #wait
+    client.loop_stop()
+    client.disconnect()
 
-#connect, loop, subscribe, publish, display results
-#note that callback functions are asynchronous on anoter thread so the order may not always appear logical (in logs)
-print("connecting to broker")
-client.connect(broker_address)              #connect to broker
-client.loop_start()                         #start the loop
-time.sleep(4)                               #give client time to establish connection
-
-#make client subscriptions
-client.subscribe("sensor1")       #subscribe to topic *MUST BE SUBSCRIBED BEFORE PUBLISH TO RECEIVE MESSAGE*
-client.subscribe("sensor2") 
-client.subscribe("sensor3") 
-
-#publish data sensor data (mock)
-print("Publishing message to topic","house/bulbs/bulb1")
-client.publish("sensor1","s1-1")  #publish to topic sensor1
-client.publish("sensor1","s1-2")  #publish to topic
-client.publish("sensor1","s1-3")  #publish to topic
-
-client.publish("sensor2","s2-1")  #publish to topic sensor2
-client.publish("sensor2","s2-2")  #publish to topic
-client.publish("sensor2","s2-3")  #publish to topic
-
-count=0
-#test with loop
-while count<10:
-    randNumber = uniform(20.0, 21.0)
-    client.publish("sensor3", randNumber)
-    time.sleep(1)
-    count = count +1
-    
-# client.publish("sensor3","s3-2")  #publish to topic sensor3
-# client.publish("sensor3","s3-2")  #publish to topic
-# client.publish("sensor3","s3-3")  #publish to topic
-
-time.sleep(4) #wait
-client.loop_stop() #stop the loop
-client.disconnect()
-
+# view to display data from data structures in web page based on user selection of sensors - testing purposes only
 def subscribeClient(request):
     mqttBroker = "mqtt.eclipseprojects.io"
     client = mqtt.Client("admin")
@@ -175,10 +171,12 @@ def subscribeClient(request):
 
     return render(request, "mqtt_data.html")
 
+# view to test database output - displays data pulled from database. For testing purposes only - real data displayed in graphs
 def data_display_test(request):
-  entries = Entry.objects.all().values()
-  template = loader.get_template('data_display_test.html')
-  context = {
-    'entries': entries,
-  }
-  return HttpResponse(template.render(context, request))
+    generate_data()
+    entries = Entry.objects.all().values()
+    template = loader.get_template('data_display_test.html')
+    context = {
+        'entries': entries,
+    }
+    return HttpResponse(template.render(context, request))
