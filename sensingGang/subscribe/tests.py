@@ -2,21 +2,16 @@ import unittest
 from django.test import TestCase,Client
 import paho.mqtt.client as mqtt
 from unittest import TestCase, mock
-from subscribe.mqtt_script import *
+from subscribe.views import *
 import time
+from .models import Sensors, DataEntries, Entry
 
 
 client = mqtt.Client("test_client2")
 mqttBroker = "mqtt.eclipseprojects.io"
-# mqtt_client = MyMQTTClient("test_client")
 
 # Create your tests here.
 class MyTestCase(TestCase):
-    # def test_subscribe(self):
-    #     # Define the expected arguments
-    #     topic = 'test_topic'
-    #     mqtt_client.subscribe(topic)
-    #     self.assertEqual(mqtt_client.is_subscribed, True)
     
     # test for publish
     def test_publish(self):
@@ -26,13 +21,6 @@ class MyTestCase(TestCase):
         client.subscribe("topic")
         (result,mid) = client.publish("topic", "test")
         self.assertEqual(result,0)
-       
-        
-    # def test_unsubscribe(self):
-    #     topic = "test_topic"
-    #     mqtt_client.subscribe(topic)
-    #     mqtt_client.unsubscribe(topic)
-    #     self.assertEqual(mqtt_client.is_subscribed, False)
         
     # test for unsubscribe without altering paho method
     def test_unsubscribe2(self):
@@ -45,7 +33,7 @@ class MyTestCase(TestCase):
         (result, mid) = client.unsubscribe(topic)
         assert(result == 0)
     
-    # test for subscribe() withouth altering paho method
+    # test for subscribe without altering paho method
     def test_subscribe2(self):
         mqttBroker = "mqtt.eclipseprojects.io"
         client = mqtt.Client("test_client")
@@ -56,16 +44,19 @@ class MyTestCase(TestCase):
         (result, mid) = client.subscribe(topic)
         assert(result == 0)
         
+    # test to ensure the sensorList page is loaded
     def test_sensor_list(self):
         self.client = Client()
         response = self.client.get('/sensorList')
         self.assertEqual(response.status_code, 200)
         
+    # test to ensure the subscribeClient page is loaded
     def test_subscribeClient(self):
         self.client = Client()
         response = self.client.get('/subscribeClient')
         self.assertEqual(response.status_code, 200)
     
+    # test to check if client successfully disconnects from broker
     def test_disconnect(self):
         mqttBroker = "mqtt.eclipseprojects.io"
         client = mqtt.Client("test_client")
@@ -73,6 +64,7 @@ class MyTestCase(TestCase):
         client.disconnect()
         self.assertEqual(client.is_connected(), False)
         
+    # test for connecting client to broker
     def test_connect(self):
         mqttBroker = "mqtt.eclipseprojects.io"
         client = mqtt.Client("test_client")
@@ -81,4 +73,16 @@ class MyTestCase(TestCase):
         time.sleep(1)        # wait for the client to establish a connection
         self.assertTrue(client.is_connected())  # assert that the client is connected
         client.loop_stop()   
-          
+        
+    # test to ensure that data is being generated upon method call
+    def test_generate_data(self):
+        entries = len(Entry.objects.all().values()) # get the initial amount of data in the database
+        generate_data()    # generate theadditional data
+        entries2 = len(Entry.objects.all().values())    # get the new amount of data in the databse
+        self.assertFalse(entries==entries2) #assert that some data has been added to the database
+        self.assertTrue(entries2==(entries+30)) #30 values should be added to database upon data generation
+       
+    # test to ensure appropriate client is instantiated with _client_id 
+    def test_init(self):
+        testClient = init_client('test')
+        self.assertTrue(testClient._client_id.decode()=='test')

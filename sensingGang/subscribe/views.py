@@ -54,7 +54,7 @@ def on_message(client, userdata, message):
     print("message retain flag=",message.retain)
 
 def init_client(client_name):
-    client = mqtt.Client(client_id=client_name) #create new client instance
+    client = mqtt.Client(client_name) #create new client instance
     # admin = Sensors(name=client)
     # admin.save()
     
