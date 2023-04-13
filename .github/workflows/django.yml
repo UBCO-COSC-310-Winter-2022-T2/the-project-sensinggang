@@ -25,11 +25,8 @@ jobs:
       run: |
         pip install django
         pip install paho-mqtt
-    - name: Setup DB
-      run: |
-      working-directory: sensingGang
-        python manage.py migrate
     - name: Run Tests
       working-directory: sensingGang
       run: |
+        python manage.py migrate
         python manage.py test
