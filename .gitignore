@@ -5,6 +5,8 @@ venv.bak/
 .env
 .venv
 env/
-_pycahce_/
+__pycache__/
+.pyc
 db.sqlite3
+home/
 requirements.txt
