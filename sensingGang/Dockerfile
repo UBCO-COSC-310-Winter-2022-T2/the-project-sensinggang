@@ -15,6 +15,12 @@ RUN  pip install --no-cache-dir -r requirements.txt
 # Copy the entire project directory into the container at /app
 COPY . /app/
 
+# Running static
+RUN ls -la /app/static
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
 # Expose port 8000 for the Django development server
 EXPOSE 8000
 
