@@ -15,5 +15,18 @@ class DataEntries(models.Model):
     
 class Entry(models.Model):
     topic = models.CharField(max_length=255)
-    data = models.TextField()
+    data = models.FloatField()
     pub_date = models.DateField()
+    
+class Entry2(models.Model):
+    topic = models.CharField(max_length=255)
+    data = models.FloatField()
+    pub_date = models.DateField()
+    
+class Product(models.Model):
+    category = models.CharField(max_length=100, null=False, blank=False)
+    num_of_products = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.category} - {self.num_of_products}'
+        

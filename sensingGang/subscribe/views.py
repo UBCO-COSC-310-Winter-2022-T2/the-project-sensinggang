@@ -6,8 +6,10 @@ from django.contrib import messages
 import time, datetime
 from queue import Queue
 from random import randrange, uniform
-from .models import Sensors, DataEntries, Entry
+from .models import Sensors, DataEntries, Entry, Entry2
 from django.template import loader
+from . models import Product
+from . forms import ProductForm
 
 #variables to transfer data
 mqtt_data_list1 = [] # define the list to store the MQTT data sensor 1
@@ -45,7 +47,7 @@ def on_message(client, userdata, message):
                  mqtt_data_list3.append(message.payload.decode("utf-8"))
     
     # create a new entry in the Entry model with the received messaged and the current time
-    entry = Entry(topic=message.topic, data=message.payload.decode(), pub_date=datetime.datetime.now())
+    entry = Entry2(topic=message.topic, data=message.payload.decode(), pub_date=datetime.datetime.now())
     entry.save()
     
     print("message received " ,str(message.payload.decode("utf-8")))
@@ -74,9 +76,9 @@ def on_connect(client, userdata, flags, rc):
         print("Bad connection, returned code:", rc)
         
     #subcribe to topics when connected
-    client.subscribe("sensor1")       #subscribe to topic *MUST BE SUBSCRIBED BEFORE PUBLISH TO RECEIVE MESSAGE*
-    client.subscribe("sensor2") 
-    client.subscribe("sensor3") 
+    client.subscribe("sensorX")       #subscribe to topic *MUST BE SUBSCRIBED BEFORE PUBLISH TO RECEIVE MESSAGE*
+    client.subscribe("sensorY") 
+    client.subscribe("sensorZ") 
     
 def on_log(client, userdata, level, buf):
     print("log: ",buf)
@@ -111,9 +113,9 @@ def generate_data():
         randNumber3 = uniform(20.0, 21.0)
         randNumber2 = uniform(10.0, 15.0)
         randNumber1 = uniform(0.0, 5.0)
-        client.publish("sensor1", randNumber1)
-        client.publish("sensor2", randNumber2)
-        client.publish("sensor3", randNumber3)
+        client.publish("sensorX", randNumber1)
+        client.publish("sensorY", randNumber2)
+        client.publish("sensorZ", randNumber3)
         time.sleep(1)
         count = count +1
 
@@ -180,3 +182,21 @@ def data_display_test(request):
         'entries': entries,
     }
     return HttpResponse(template.render(context, request))
+
+def index(request):
+    products = Product.objects.all()
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = ProductForm()        
+    generate_data()
+    entries = Entry2.objects.all()
+    context = {
+        'entries': entries,
+    }
+
+    return render(request, 'index.html', context)
