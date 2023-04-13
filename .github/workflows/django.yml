@@ -24,6 +24,7 @@ jobs:
     - name: Install Dependencies
       run: |
         pip install django
+        pip install paho-mqtt
     - name: Run Tests
       working-directory: sensingGang
       run: |
