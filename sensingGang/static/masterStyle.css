@@ -4,6 +4,11 @@ div.nav{
     box-sizing: border-box;
 
 }
+div.content{
+    margin-left: 1.5%;
+    font-family: sans-serif;
+    min-height: 100%;
+}
 ul {
     list-style-type: none;
     overflow: hidden;
@@ -48,9 +53,7 @@ li a:hover{
 }
 body {
     background-color: #FAF5E9;
-    margin-left: 1.5%;
-    font-family: sans-serif;
-    min-height: 100%;
+
 }
 form{
     border-radius: 5px;
