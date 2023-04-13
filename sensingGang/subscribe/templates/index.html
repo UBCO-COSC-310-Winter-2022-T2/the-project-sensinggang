@@ -69,7 +69,7 @@
                 var myChart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: [{% for x in entries %}  '{{ x.topic }}',  {% endfor %}],
+                        labels: [{% for x in entries %}  '{{ x.topic }}',  {% endfor %}], // will need to alter to display by topic and pub_date
                         datasets: [{
                             label: '# of iot sensor products',
                             data: [{% for x in entries %}  {{ x.data }},  {% endfor %}],
@@ -106,14 +106,12 @@
                 </script>
         </div>
     </div>
+    <!-- added for sanity check -->
     <h1>Data</h1>
-  
 <ul>
   {% for x in entries %}
     <li>{{ x.topic }} {{x.data }} {{ x.pub_date }}</li>
   {% endfor %}
 </ul>
-
-
 
 {% endblock %}
