@@ -1,0 +1,49 @@
+<!-- the homePage template extends the masterTemplate, which includes the navbar-->
+{% extends "../masterTemplate.html" %}
+
+{% load static %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'homePageTemplate.css' %}">
+{% endblock style %}
+
+{% block content %}
+
+<div class="main">
+<div class="item">
+    <span> 1</span>
+</div> 
+<div class="item">
+    <span> 2</span>
+</div> 
+<div class="item">
+    <span> 3</span>
+</div> 
+<div class="item">
+    <span> 4</span>
+</div>
+<div class="item">
+    <span> 5</span>
+</div>
+<div class="item">
+    <span> 6</span>
+</div>
+<div class="item">
+    <span> 7</span>
+</div>
+<div class="item">
+    <span> 8</span>
+</div>
+<div class="item">
+    <span> 9</span>
+</div>
+<div class="item">
+    <span> 10</span>
+</div>
+<div class="item">
+    <span> 11</span>
+</div>
+<div class="item">
+    <span> 12</span>
+</div>
+</div> 
+{% endblock content %}
