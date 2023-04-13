@@ -28,6 +28,5 @@ jobs:
     - name: Run Tests
       working-directory: sensingGang
       run: |
-        python manage.py collectstatic
         python manage.py migrate
         python manage.py test
