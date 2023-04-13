@@ -5,6 +5,6 @@ venv.bak/
 .env
 .venv
 env/
-__pycahce__/
+__pycache__/
 .pyc
 db.sqlite3
