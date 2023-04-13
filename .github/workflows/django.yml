@@ -27,6 +27,8 @@ jobs:
         pip install paho-mqtt
     - name: Run Tests
       working-directory: sensingGang
+      env:
+        DATABASE_URL: sqlite:///db.sqlite3
       run: |
         python manage.py migrate
         python manage.py test
