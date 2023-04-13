@@ -5,8 +5,8 @@
 
     <div class="row mt-5">
         <div class="col-md-4 mt-2">
-            <h4>Add Data</h4>
-            <hr>
+            {% comment %} <h4>Add Data</h4> {% endcomment %}
+            {% comment %} <hr> {% endcomment %}
 
             <form action="" method="POST">
                 {% csrf_token %}
@@ -62,48 +62,73 @@
                 });
                 </script>
         </div> -->
+        <div class="col-md-4">
+            <h4>Select Chart Type:</h4>
+            <select id="chartType" class="form-select">
+                <option value="line" selected>Line Chart</option>
+                <option value="bar">Bar Chart</option>
+                <option value="pie">Pie Chart</option>
+            </select>
+        </div>
+
         <div class="col-md-8">
             <canvas id="myChart" width="400" height="250"></canvas>
-                <script>
+            <script>
                 var ctx = document.getElementById('myChart').getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: [{% for x in entries %}  '{{ x.topic }}',  {% endfor %}], // will need to alter to display by topic and pub_date
-                        datasets: [{
-                            label: '# of iot sensor products',
-                            data: [{% for x in entries %}  {{ x.data }},  {% endfor %}],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.8)',
-                                'rgba(54, 162, 235, 0.8)',
-                                'rgba(255, 206, 86, 0.8)',
-                                'rgba(75, 192, 192, 0.8)',
-                                'rgba(153, 102, 255, 0.8)',
-                                'rgba(255, 159, 64, 0.8)',
-                                'rgba(240, 120, 50, 0.8)',
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)',
-                                'rgba(240, 120, 50, 1)',
-
-                            ],
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                var myChart;
+                
+                function createChart(type) {
+                    if(myChart) {
+                        myChart.destroy();
+                    }
+                    myChart = new Chart(ctx, {
+                        type: type,
+                        data: {
+                            labels: [{% for x in entries %}  '{{ x.topic }}',  {% endfor %}],
+                            datasets: [{
+                                label: '# of iot sensor products',
+                                data: [{% for x in entries %}  {{ x.data }},  {% endfor %}],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.8)',
+                                    'rgba(54, 162, 235, 0.8)',
+                                    'rgba(255, 206, 86, 0.8)',
+                                    'rgba(75, 192, 192, 0.8)',
+                                    'rgba(153, 102, 255, 0.8)',
+                                    'rgba(255, 159, 64, 0.8)',
+                                    'rgba(240, 120, 50, 0.8)',
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)',
+                                    'rgba(240, 120, 50, 1)',
+        
+                                ],
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
                             }
                         }
-                    }
+                    });
+                }
+                
+                //default chart type
+                createChart('line');
+        
+                //update upon user selection from drop down
+                document.getElementById('chartType').addEventListener('change', function() {
+                    var type = this.value;
+                    createChart(type);
                 });
-                </script>
+            </script>
         </div>
     </div>
     <!-- added for sanity check -->
