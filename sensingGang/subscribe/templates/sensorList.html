@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Sensor List</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        
+        <h3>Available Sensors</h3>
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          <strong>Message: </strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endfor %}
+
+        <form action="subscribeClient" method="post">
+             {% csrf_token %}
+            <label = for"">Sensor 1</label>
+            <input type="hidden"   name="sensor1"  value="" >
+            <input type="checkbox" name="sensor1"  value="sensor1">
+            <br>
+            <label = for"">Sensor 2</label>
+            <input type="hidden"   name="sensor2"  value="" >
+            <input type="checkbox" name="sensor2"  value="sensor2">
+            <br>
+            <label = for"">Sensor 3</label>
+            <input type="hidden"   name="sensor3"  value="" >
+            <input type="checkbox" name="sensor3"  value="sensor3">
+            <br>
+            <button type = "submit">Sign Up</button>
+        </form>   
+        
+        <script src="" async defer></script>
+    </body>
+</html>
