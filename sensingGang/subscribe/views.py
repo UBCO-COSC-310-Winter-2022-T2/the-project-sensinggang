@@ -6,10 +6,12 @@ from django.contrib import messages
 import time, datetime
 from queue import Queue
 from random import randrange, uniform
-from .models import Sensors, DataEntries, Entry, Entry2
+from .models import Sensors, DataEntries, Entry, Entry2, Subscriptions
 from django.template import loader
 from . models import Product
 from . forms import ProductForm
+from django.contrib.auth.models import User
+from users.views import *
 
 #variables to transfer data
 mqtt_data_list1 = [] # define the list to store the MQTT data sensor 1
@@ -17,6 +19,7 @@ mqtt_data_list2 = [] # define the list to store the MQTT data sensor 2
 mqtt_data_list3 = [] # define the list to store the MQTT data sensor 3
 received_messages = [] # define the list to store the MQTT data
 q = Queue()
+sensor_list = ["sensorX", "sensorY", "sensorZ"]
 
 #flags for "subscriptions" and displaying data
 is_sub_s1 = False
@@ -31,7 +34,10 @@ def subscribe(request):
     return render(request, "subscribe.html")
 
 def sensorList(request):
-    return render(request, "sensorList.html")
+    context = {
+        'sensor_list': sensor_list
+        }
+    return render(request, 'subscribe/sensorList.html', context)
 
 #on_message is callback function for receiving data as a subscriber
 #stores data in data structures and database
@@ -50,22 +56,10 @@ def on_message(client, userdata, message):
     entry = Entry2(topic=message.topic, data=message.payload.decode(), pub_date=datetime.datetime.now())
     entry.save()
     
-    
     print("message received " ,str(message.payload.decode("utf-8")))
     print("message topic=",message.topic)
     print("message qos=",message.qos)
     print("message retain flag=",message.retain)
-#display time
-# def display_time(pub_date):
-#     return pub_date.strftime('%H:%M:%S')
-
-# def display_data(request):
-#     entries = Entry2.objects.all()
-#     data = []
-#     for entry in entries:
-#         data.append((entry.topic, entry.data, display_time(entry.pub_date)))
-#     context = {'data': data}
-#     return render(request, 'index.html', context)
 
 def init_client(client_name):
     client = mqtt.Client(client_name) #create new client instance
@@ -181,7 +175,8 @@ def subscribeClient(request):
 
             # message for successful account creation
             messages.success(request, "Your have successfully subscribe to: " + sensors)
-            return redirect('subscribe')
+
+
 
     return render(request, "mqtt_data.html")
 
@@ -196,19 +191,46 @@ def data_display_test(request):
     return HttpResponse(template.render(context, request))
 
 def index(request):
-    products = Product.objects.all()
-
-    if request.method == 'POST':
-        form = ProductForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('index')
-    else:
-        form = ProductForm()        
     generate_data()
     entries = Entry2.objects.all()
     context = {
         'entries': entries,
     }
-
     return render(request, 'index.html', context)
+
+def subscribeForm(request):
+    user = request.user
+    # user_attributes = {
+    #     'username': user.username
+    # }
+    customername = user.username
+    
+    sensors = request.POST['sensors']
+    # sensorY = request.POST['sensorY']
+    # sensorZ = request.POST['sensorZ']
+    
+    # Try to get an instance of MyModel with a specific name
+    obj, created = Subscriptions.objects.get_or_create(username=customername)
+    
+    # Check if the object was created or not
+    if created:
+        print('A new instance of MyModel was created.')
+    else:
+        print('An instance of MyModel already exists with this name.')
+    
+    # if sensors are selected, update the subscriptions in the database.
+    if(sensors=="sensorX"):
+        obj.sensorX=True
+    if(sensors=="sensorY"):
+        obj.sensorY=True
+    if(sensors=="sensorZ"):
+        obj.sensorZ=True
+    
+    # save the changes
+    obj.save()
+    results = Subscriptions.objects.filter(username=customername)
+    context = {
+        'results': results,
+    }
+    return render(request, 'homePage/homePageTemplate.html', context)
+
