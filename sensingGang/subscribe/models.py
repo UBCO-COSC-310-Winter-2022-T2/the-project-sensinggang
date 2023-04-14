@@ -21,7 +21,7 @@ class Entry(models.Model):
 class Entry2(models.Model):
     topic = models.CharField(max_length=255)
     data = models.FloatField()
-    pub_date = models.DateField()
+    pub_date = models.DateTimeField()
     
 class Product(models.Model):
     category = models.CharField(max_length=100, null=False, blank=False)

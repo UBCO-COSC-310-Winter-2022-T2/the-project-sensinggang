@@ -1,61 +1,67 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import paho.mqtt.client as mqtt
-from django.contrib import messages
-#from .mqtt_script import mqtt_data_list # import the mqtt_data list from mqtt.py
 import time, datetime
-from queue import Queue
 from random import randrange, uniform
 from .models import Sensors, DataEntries, Entry, Entry2, Subscriptions
 from django.template import loader
-from . models import Product
-from . forms import ProductForm
 from django.contrib.auth.models import User
 from users.views import *
 
 #variables to transfer data
-mqtt_data_list1 = [] # define the list to store the MQTT data sensor 1e
-mqtt_data_list2 = [] # define the list to store the MQTT data sensor 2
-mqtt_data_list3 = [] # define the list to store the MQTT data sensor 3
-received_messages = [] # define the list to store the MQTT data
-q = Queue()
 sensor_list = ["sensorX", "sensorY", "sensorZ"]
-
-#flags for "subscriptions" and displaying data
-is_sub_s1 = False
-is_sub_s2 = False
-is_sub_s3 = False
-
-def mqtt_data(request):
-    # Render the data in a template
-    return render(request, 'mqtt_data.html', {'mqtt_data_list1': mqtt_data_list1,'mqtt_data_list2': mqtt_data_list2,'mqtt_data_list3': mqtt_data_list3, 'is_sub_s1':is_sub_s1,'is_sub_s2':is_sub_s2,'is_sub_s3':is_sub_s3})
-
-def subscribe(request):
-    return render(request, "subscribe.html")
 
 def sensorList(request):
     context = {
-        'sensor_list': sensor_list
+        'sensor_list': getNotSubscribed(request)
         }
     return render(request, 'subscribe/sensorList.html', context)
+
+def sensorRemove(request):
+    context = {
+        'userSensors': getUserSensors(request)
+    }
+    return render(request, 'subscribe/sensorRemove.html', context)
+
+def getUserSensors(request):
+    user = request.user
+    customerName = user.username
+    userSensors = []
+    subscribed =  Subscriptions.objects.filter(username=customerName)
+    for sub in subscribed:
+        if(sub.sensorX): userSensors.append('sensorX')
+        if(sub.sensorY): userSensors.append('sensorY')
+        if(sub.sensorZ): userSensors.append('sensorZ')
+    return userSensors
+
+def getNotSubscribed(request):
+    sensor_set = set(sensor_list)
+    userSensor_set = set(getUserSensors(request))
+    return list(sensor_set.symmetric_difference(userSensor_set))
+
+def unsubscribeForm(request):
+    user = request.user
+    customername = user.username
+    sensors = request.POST['sensors']
+
+    obj = Subscriptions.objects.get(username=customername)
+    if(sensors=="sensorX"):
+        obj.sensorX=False
+    if(sensors=="sensorY"):
+        obj.sensorY=False
+    if(sensors=="sensorZ"):
+        obj.sensorZ=False
+    obj.save()
+    return render(request, 'homePage/homePageTemplate.html')
+
 
 #on_message is callback function for receiving data as a subscriber
 #stores data in data structures and database
 def on_message(client, userdata, message):
-    q.put(message)
-    if(message.topic=="sensor1"):
-        mqtt_data_list1.append(message.payload.decode("utf-8"))
-    else:
-        if(message.topic=="sensor2"):
-            mqtt_data_list2.append(message.payload.decode("utf-8"))
-        else:
-            if(message.topic=="sensor3"):
-                 mqtt_data_list3.append(message.payload.decode("utf-8"))
-    
     # create a new entry in the Entry model with the received messaged and the current time
     entry = Entry2(topic=message.topic, data=message.payload.decode(), pub_date=datetime.datetime.now())
     entry.save()
-    
+    #print messages, topic
     print("message received " ,str(message.payload.decode("utf-8")))
     print("message topic=",message.topic)
     print("message qos=",message.qos)
@@ -63,8 +69,6 @@ def on_message(client, userdata, message):
 
 def init_client(client_name):
     client = mqtt.Client(client_name) #create new client instance
-    # admin = Sensors(name=client)
-    # admin.save()
     
     #attach callback functions:
     client.on_message=on_message        #attach on message function to callback
@@ -129,81 +133,6 @@ def generate_data():
     time.sleep(4) #wait
     client.loop_stop()
     client.disconnect()
-
-# view to display data from data structures in web page based on user selection of sensors - testing purposes only
-def subscribeClient(request):
-    mqttBroker = "mqtt.eclipseprojects.io"
-    client = mqtt.Client("admin")
-    client.connect(mqttBroker)
-    #verifying post request method
-    if request.method == "POST":
-        sensor1 = request.POST['sensor1']
-        sensor2 = request.POST['sensor2']
-        sensor3 = request.POST['sensor3']
-        
-        # Error checking for account creation
-        errors = []
-        if len(sensor1) == 0 and len(sensor2) == 0 and len(sensor3) == 0:
-            errors.append("No Sensors")
-        
-        if errors:
-            for error in errors:
-                messages.error(request, error)
-            return redirect('subscribe')
-        else:
-            # subscribe to sensors object and saving it
-            sensors = ""
-            if(len(sensor1)!=0):
-                global is_sub_s1
-                is_sub_s1= True
-                sensors = sensors + " " + sensor1
-            else:
-                is_sub_s1=False
-            if(len(sensor2)!=0):
-                global is_sub_s2 
-                is_sub_s2 = True
-                sensors = sensors + " " + sensor2
-            else:
-                is_sub_s2=False
-            if(len(sensor3)!=0):
-                global is_sub_s3 
-                is_sub_s3= True
-                sensors = sensors + " " + sensor3
-            else:
-                is_sub_s3=False
-                
-
-            # message for successful account creation
-            messages.success(request, "Your have successfully subscribe to: " + sensors)
-
-
-
-    return render(request, "mqtt_data.html")
-
-# view to test database output - displays data pulled from database. For testing purposes only - real data displayed in graphs
-def data_display_test(request):
-    generate_data()
-    entries = Entry.objects.all().values()
-    template = loader.get_template('data_display_test.html')
-    context = {
-        'entries': entries,
-    }
-    return HttpResponse(template.render(context, request))
-
-def index(request):
-    generate_data()
-    dataX = Entry2.objects.filter(topic="sensorX")
-    dataY = Entry2.objects.filter(topic="sensorY")
-    dataZ = Entry2.objects.filter(topic="sensorZ")
-    # context = {
-    #     'dataX': results,
-    # }
-    # entries = Entry2.objects.all()
-    context = {
-        'dataX': dataX, 'dataY' : dataY, 'dataZ' : dataZ
-    }
-    # return render(request, 'homePage/homePageTemplate.html', context)
-    return render(request, 'homePage/homePageTemplate.html', context)
 
 def subscribeForm(request):
     # get user information from logged in User object
