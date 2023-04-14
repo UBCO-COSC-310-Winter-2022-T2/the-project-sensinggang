@@ -7,6 +7,7 @@ urlpatterns = [
     path('index', views.index, name='index'),
     path('sensorList', views.sensorList, name='sensorList'),
     path('subscribeClient', views.subscribeClient, name='subscribeClient'),
+    path('subscribeForm', views.subscribeForm, name='subscribeForm'),
     path('mqtt_data/', views.mqtt_data, name='mqtt_data'),
     path('data_display_test/', views.data_display_test, name='data_display_test'),
 ]

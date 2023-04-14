@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
+
 # Create your views here.
 def home(request):
     return render(request,"users/home.html")
@@ -70,3 +71,4 @@ def signin(request):
 def signout(request):
     logout(request)
     return redirect('home')
+
