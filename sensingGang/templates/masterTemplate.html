@@ -27,8 +27,9 @@
       <li><a href="{% url 'signin' %}">Login</a></li>
     {% endif %}
         <h1 id="logo">Sensing Gang</h1>
-        <li><a href="">Manage Account</a></li>
+        {% if user.is_authenticated %}
         <li><a href="{% url 'sensorList' %}">Add Sensor</a></li>
+        {% endif %}
         <li><a href="{% url 'homePage' %}">Home</a></li>
     </ul>
 </div>
