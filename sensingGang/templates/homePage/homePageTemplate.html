@@ -8,6 +8,7 @@
 
 {% block content %}
 
+{% if user.is_authenticated %}
 <div class="main">
     </div>
     {% for subscription in results %}
@@ -248,31 +249,8 @@
 <div class="item">
     <span> 4 <a href="{% url 'button' %}"><button>Get Live Update!</button></a></span>
 </div>
-<div class="item">
-    <span> 5</span>
-</div>
-<div class="item">
-    <span> 6</span>
-</div>
-<div class="item">
-    <span> 7</span>
-</div>
-<div class="item">
-    <span> 8</span>
-</div>
-<div class="item">
-    <span> 9</span>
-</div>
-<div class="item">
-    <span> 10</span>
-</div>
-<div class="item">
-    <span> 11</span>
-</div>
-<div class="item">
-    <span> 12</span>
-</div>
 </div>  
-
-  
+{% else %}
+  <div class = "message"> You must be registered to view sensor data!</div>
+{% endif %}
 {% endblock content %}
