@@ -35,7 +35,7 @@ def subscribe(request):
 
 def sensorList(request):
     context = {
-        'sensor_list': sensor_list
+        'sensor_list': getNotSubscribed(request)
         }
     return render(request, 'subscribe/sensorList.html', context)
 
@@ -56,16 +56,17 @@ def getUserSensors(request):
         if(sub.sensorZ): userSensors.append('sensorZ')
     return userSensors
 
+def getNotSubscribed(request):
+    sensor_set = set(sensor_list)
+    userSensor_set = set(getUserSensors(request))
+    return list(sensor_set.symmetric_difference(userSensor_set))
+
 def unsubscribeForm(request):
     user = request.user
     customername = user.username
     sensors = request.POST['sensors']
 
     obj = Subscriptions.objects.get(username=customername)
-    print('Print obj')
-    print(obj)
-    print('Print obj.sensorZ')
-    print(obj.sensorZ)
     if(sensors=="sensorX"):
         obj.sensorX=False
     if(sensors=="sensorY"):
