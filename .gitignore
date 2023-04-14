@@ -5,4 +5,12 @@ venv.bak/
 .env
 .venv
 env/
+<<<<<<< HEAD
 __pycahce__/
+=======
+__pycache__/
+.pyc
+db.sqlite3
+home/
+requirements.txt
+>>>>>>> 377b1b6ded529f536bbca6f113d01c05d74da56b
