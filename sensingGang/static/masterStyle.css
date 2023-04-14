@@ -1,5 +1,5 @@
 div.nav{
-    height: .9%;
+    height: .5% !important;
     margin-bottom: 2%;
     box-sizing: border-box;
 
@@ -17,7 +17,7 @@ ul {
     height: 100%;
     width: 100%;
     margin: 0;
-    padding:0;
+    padding:0 !important;
 }
 #logo{
     color: #FFCC00;
@@ -25,10 +25,10 @@ ul {
     padding: 1% 1.5%;
     margin: 0 0 0 0;
     background-color: #009B4D;
-    box-sizing: border-box;
+    box-sizing: border-box; 
     font-family: sans-serif;
-    height: 62px;
-    font-size:150%;
+    height: 65px !important;
+    font-size:150% !important;
 }
 
 
@@ -49,7 +49,7 @@ li a:hover{
     color: #FAF5E9;
 }
 body {
-    background-color: #FAF5E9;
+    background-color: #FAF5E9 !important;
 
 }
 form{
