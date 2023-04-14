@@ -205,17 +205,13 @@ def subscribeForm(request):
     # }
     customername = user.username
     
-    sensorX = request.POST['sensorX']
-    sensorY = request.POST['sensorY']
-    sensorZ = request.POST['sensorZ']
+    sensors = request.POST['sensors']
+    # sensorY = request.POST['sensorY']
+    # sensorZ = request.POST['sensorZ']
     
     # Try to get an instance of MyModel with a specific name
     obj, created = Subscriptions.objects.get_or_create(username=customername)
     
-    # logic to set all subscriptions to false, ensure data is only displayed for selected sensors
-    obj.sensorX = False
-    obj.sensorY = False
-    obj.sensorZ = False
     # Check if the object was created or not
     if created:
         print('A new instance of MyModel was created.')
@@ -223,11 +219,11 @@ def subscribeForm(request):
         print('An instance of MyModel already exists with this name.')
     
     # if sensors are selected, update the subscriptions in the database.
-    if(sensorX):
+    if(sensors=="sensorX"):
         obj.sensorX=True
-    if(sensorY):
+    if(sensors=="sensorY"):
         obj.sensorY=True
-    if(sensorZ):
+    if(sensors=="sensorZ"):
         obj.sensorZ=True
     
     # save the changes
