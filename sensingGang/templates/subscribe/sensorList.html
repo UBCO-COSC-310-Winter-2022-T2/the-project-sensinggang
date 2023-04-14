@@ -17,11 +17,11 @@
         </div>
       {% endfor %}
 
-        <form action="subscribeClient" method="post">
+        <form action="subscribeForm" method="post">
              {% csrf_token %}
             <select id="sensors" name="sensors">
               {% for sensors in sensor_list %}
-              <option value="{{sensors.index}}">{{sensors}}</a>
+              <option value="{{sensors}}">{{sensors}}</a>
               {% endfor %}
             </select>
            <button type = "submit">Subscribe</button>

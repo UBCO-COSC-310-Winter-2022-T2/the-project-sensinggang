@@ -17,7 +17,7 @@ mqtt_data_list2 = [] # define the list to store the MQTT data sensor 2
 mqtt_data_list3 = [] # define the list to store the MQTT data sensor 3
 received_messages = [] # define the list to store the MQTT data
 q = Queue()
-sensor_list = ["sensor1", "sensor2", "sensor3"]
+sensor_list = ["sensorX", "sensorY", "sensorZ"]
 
 #flags for "subscriptions" and displaying data
 is_sub_s1 = False
@@ -195,6 +195,3 @@ def index(request):
         'entries': entries,
     }
     return render(request, 'index.html', context)
-
-sensor_list = ["sensor1", "sensor2", "sensor3"]
-sensor = "heyo"
