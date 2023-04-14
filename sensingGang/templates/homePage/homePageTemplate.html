@@ -11,7 +11,7 @@
 {% if user.is_authenticated %}
 <div class="main">
     </div>
-    {% for subscription in results %}
+    <!-- {% for subscription in results %} -->
     {% if subscription.sensorX %}
     <div class="item">
         Display sensor X chart
@@ -23,22 +23,20 @@
                 <option value="pie">Pie Chart</option>
                 <option value="radar">Radar Chart</option>
                 <option value="doughnut">Doughnut Chart</option>
-
-
             </select>
         </div>
 
         <div class="col-md-8">
             <canvas id="myChart1" width="400" height="250"></canvas>
             <script>
-                var ctx = document.getElementById('myChart1').getContext('2d');
+                var ctx1 = document.getElementById('myChart1').getContext('2d');
                 var myChart1;
                 
-                function createChart(type1) {
+                function createChart1(type1) {
                     if(myChart1) {
                         myChart1.destroy();
                     }
-                    myChart1 = new Chart(ctx, {
+                    myChart1 = new Chart(ctx1, {
                         type: type1,
                         data: {
                             labels: [{% for x in dataX %}  '{{ x.pub_date }}',  {% endfor %}],
@@ -78,13 +76,13 @@
                 }
                 
                 //default chart type
-                createChart('line');
+                createChart1('line');
         
                 //update upon user selection from drop down
                 document.getElementById('chartType1').addEventListener('change', function() {
-                    var type1 = this.value;
-                    createChart(type1);
-                });
+                    var type1 = document.getElementById('chartType1').value;
+                    createChart1(type1);
+                });                
             </script>
         </div>
     </div>
@@ -108,14 +106,14 @@
         <div class="col-md-8">
             <canvas id="myChart2" width="400" height="250"></canvas>
             <script>
-                var ctx = document.getElementById('myChart2').getContext('2d');
+                var ctx2 = document.getElementById('myChart2').getContext('2d');
                 var myChart2;
                 
-                function createChart(type2) {
+                function createChart2(type2) {
                     if(myChart2) {
                         myChart2.destroy();
                     }
-                    myChart2 = new Chart(ctx, {
+                    myChart2 = new Chart(ctx2, {
                         type: type2,
                         data: {
                             labels: [{% for x in dataY %}  '{{ x.pub_date }}',  {% endfor %}],
@@ -155,13 +153,13 @@
                 }
                 
                 //default chart type
-                createChart('line');
+                createChart2('line');
         
                 //update upon user selection from drop down
                 document.getElementById('chartType2').addEventListener('change', function() {
-                    var type2 = this.value;
-                    createChart(type2);
-                });
+                    var type2 = document.getElementById('chartType2').value;
+                    createChart2(type2);
+                }); 
             </script>
         </div>
     </div> 
@@ -185,14 +183,14 @@
         <div class="col-md-8">
             <canvas id="myChart3" width="400" height="250"></canvas>
             <script>
-                var ctx = document.getElementById('myChart3').getContext('2d');
+                var ctx3 = document.getElementById('myChart3').getContext('2d');
                 var myChart3;
                 
-                function createChart(type3) {
+                function createChart3(type3) {
                     if(myChart3) {
                         myChart3.destroy();
                     }
-                    myChart3 = new Chart(ctx, {
+                    myChart3 = new Chart(ctx3, {
                         type: type3,
                         data: {
                             labels: [{% for x in dataZ %}  '{{ x.pub_date }}',  {% endfor %}],
@@ -232,24 +230,18 @@
                 }
                 
                 //default chart type
-                createChart('line');
+                createChart3('line');
         
                 //update upon user selection from drop down
                 document.getElementById('chartType3').addEventListener('change', function() {
-                    var type3 = this.value;
-                    createChart(type3);
-                });
+                    var type3 = document.getElementById('chartType3').value;
+                    createChart3(type3);
+                }); 
             </script>
         </div>
     </div> 
     {% endif %}
-</div> 
-{% endfor %}
-</div>
-<div class="item">
-    <span> 4 <a href="{% url 'button' %}"><button>Get Live Update!</button></a></span>
-</div>
-</div>  
+<!-- {% endfor %} -->
 {% else %}
   <div class = "message"> You must be registered to view sensor data!</div>
 {% endif %}
