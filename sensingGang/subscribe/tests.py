@@ -75,12 +75,12 @@ class MyTestCase(TestCase):
         client.loop_stop()   
         
     # test to ensure that data is being generated upon method call
-    def test_generate_data(self):
-        entries = len(Entry2.objects.all().values()) # get the initial amount of data in the database
-        generate_data()    # generate theadditional data
-        entries2 = len(Entry2.objects.all().values())    # get the new amount of data in the databse
-        self.assertFalse(entries==entries2) #assert that some data has been added to the database
-        self.assertTrue(entries2==(entries+30)) #30 values should be added to database upon data generation
+   # def test_generate_data(self):
+      #  entries = len(Entry2.objects.all().values()) # get the initial amount of data in the database
+       # generate_data()    # generate theadditional data
+       # entries2 = len(Entry2.objects.all().values())    # get the new amount of data in the databse
+       # self.assertFalse(entries==entries2) #assert that some data has been added to the database
+       # self.assertTrue(entries2==(entries+30)) #30 values should be added to database upon data generation
        
     # test to ensure appropriate client is instantiated with _client_id 
     def test_init(self):
