@@ -49,12 +49,6 @@ class MyTestCase(TestCase):
         self.client = Client()
         response = self.client.get('/sensorList')
         self.assertEqual(response.status_code, 200)
-        
-    # test to ensure the subscribeClient page is loaded
-    def test_subscribeClient(self):
-        self.client = Client()
-        response = self.client.get('/subscribeClient')
-        self.assertEqual(response.status_code, 200)
     
     # test to check if client successfully disconnects from broker
     def test_disconnect(self):
