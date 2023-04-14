@@ -23,8 +23,6 @@
                 <option value="pie">Pie Chart</option>
                 <option value="radar">Radar Chart</option>
                 <option value="doughnut">Doughnut Chart</option>
-
-
             </select>
         </div>
 
@@ -34,12 +32,12 @@
                 var ctx = document.getElementById('myChart1').getContext('2d');
                 var myChart1;
                 
-                function createChart(type1) {
+                function createChart1(type) {
                     if(myChart1) {
                         myChart1.destroy();
                     }
                     myChart1 = new Chart(ctx, {
-                        type: type1,
+                        type: type,
                         data: {
                             labels: [{% for x in dataX %}  '{{ x.pub_date|date:'H:i:s, F j, Y' }}',  {% endfor %}],
                             datasets: [{
@@ -78,12 +76,12 @@
                 }
                 
                 //default chart type
-                createChart('line');
+                createChart1('line');
         
                 //update upon user selection from drop down
                 document.getElementById('chartType1').addEventListener('change', function() {
-                    var type1 = this.value;
-                    createChart(type1);
+                    var type = document.getElementById('chartType1').value;
+                    createChart1(type);
                 });
             </script>
         </div>
@@ -108,14 +106,14 @@
         <div class="col-md-8">
             <canvas id="myChart2" width="400" height="250"></canvas>
             <script>
-                var ctx = document.getElementById('myChart2').getContext('2d');
+                var ctx2 = document.getElementById('myChart2').getContext('2d');
                 var myChart2;
                 
-                function createChart(type2) {
+                function createChart2(type2) {
                     if(myChart2) {
                         myChart2.destroy();
                     }
-                    myChart2 = new Chart(ctx, {
+                    myChart2 = new Chart(ctx2, {
                         type: type2,
                         data: {
                             labels: [{% for x in dataY %}  '{{ x.pub_date|date:'H:i:s, F j, Y'  }}',  {% endfor %}],
@@ -155,12 +153,12 @@
                 }
                 
                 //default chart type
-                createChart('line');
+                createChart2('line');
         
                 //update upon user selection from drop down
                 document.getElementById('chartType2').addEventListener('change', function() {
-                    var type2 = this.value;
-                    createChart(type2);
+                    var type2 = document.getElementById('chartType2').value;
+                    createChart2(type2);
                 });
             </script>
         </div>
@@ -185,14 +183,14 @@
         <div class="col-md-8">
             <canvas id="myChart3" width="400" height="250"></canvas>
             <script>
-                var ctx = document.getElementById('myChart3').getContext('2d');
+                var ctx3 = document.getElementById('myChart3').getContext('2d');
                 var myChart3;
                 
-                function createChart(type3) {
+                function createChart3(type3) {
                     if(myChart3) {
                         myChart3.destroy();
                     }
-                    myChart3 = new Chart(ctx, {
+                    myChart3 = new Chart(ctx3, {
                         type: type3,
                         data: {
                             labels: [{% for x in dataZ %}  '{{ x.pub_date|date:'H:i:s, F j, Y'  }}',  {% endfor %}],
@@ -232,12 +230,12 @@
                 }
                 
                 //default chart type
-                createChart('line');
+                createChart3('line');
         
                 //update upon user selection from drop down
                 document.getElementById('chartType3').addEventListener('change', function() {
-                    var type3 = this.value;
-                    createChart(type3);
+                    var type3 = document.getElementById('chartType3').value;
+                    createChart3(type3);
                 });
             </script>
         </div>
