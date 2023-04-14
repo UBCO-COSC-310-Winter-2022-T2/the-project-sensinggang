@@ -6,10 +6,12 @@ from django.contrib import messages
 import time, datetime
 from queue import Queue
 from random import randrange, uniform
-from .models import Sensors, DataEntries, Entry, Entry2
+from .models import Sensors, DataEntries, Entry, Entry2, Subscriptions
 from django.template import loader
 from . models import Product
 from . forms import ProductForm
+from django.contrib.auth.models import User
+from users.views import *
 
 #variables to transfer data
 mqtt_data_list1 = [] # define the list to store the MQTT data sensor 1
@@ -195,3 +197,44 @@ def index(request):
         'entries': entries,
     }
     return render(request, 'index.html', context)
+
+def subscribeForm(request):
+    user = request.user
+    # user_attributes = {
+    #     'username': user.username
+    # }
+    customername = user.username
+    
+    sensorX = request.POST['sensorX']
+    sensorY = request.POST['sensorY']
+    sensorZ = request.POST['sensorZ']
+    
+    # Try to get an instance of MyModel with a specific name
+    obj, created = Subscriptions.objects.get_or_create(username=customername)
+    
+    # logic to set all subscriptions to false, ensure data is only displayed for selected sensors
+    obj.sensorX = False
+    obj.sensorY = False
+    obj.sensorZ = False
+    # Check if the object was created or not
+    if created:
+        print('A new instance of MyModel was created.')
+    else:
+        print('An instance of MyModel already exists with this name.')
+    
+    # if sensors are selected, update the subscriptions in the database.
+    if(sensorX):
+        obj.sensorX=True
+    if(sensorY):
+        obj.sensorY=True
+    if(sensorZ):
+        obj.sensorZ=True
+    
+    # save the changes
+    obj.save()
+    results = Subscriptions.objects.filter(username=customername)
+    context = {
+        'results': results,
+    }
+    
+    return render(request, 'homePage/homePageTemplate.html', context)
