@@ -236,5 +236,5 @@ def subscribeForm(request):
     context = {
         'results': results,
     }
-    
     return render(request, 'homePage/homePageTemplate.html', context)
+
