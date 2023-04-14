@@ -9,15 +9,27 @@
 {% block content %}
 
 <div class="main">
-<div class="item">
-    <span> 1</span>
+    {% for subscription in results %}
+    {% if subscription.sensorX %}
+    <div class="item">
+        Display sensor X chart
+        <span> 1</span>
+    </div> 
+    {% endif %}
+    {% if subscription.sensorY %} 
+    <div class="item">
+        Display sensor Y chart
+        <span> 1</span>
+    </div> 
+    {% endif %}
+    {% if subscription.sensorZ %}
+    <div class="item">
+        Display sensor Y chart
+        <span> 1</span>
+    </div> 
+    {% endif %}
 </div> 
-<div class="item">
-    <span> 2</span>
-</div> 
-<div class="item">
-    <span> 3</span>
-</div> 
+{% endfor %}
 <div class="item">
     <span> 4</span>
 </div>

@@ -20,19 +20,19 @@
         </div>
       {% endfor %}
 
-        <form action="subscribeClient" method="post">
+        <form action="subscribeForm" method="post">
              {% csrf_token %}
-            <label = for"">Sensor 1</label>
-            <input type="hidden"   name="sensor1"  value="" >
-            <input type="checkbox" name="sensor1"  value="sensor1">
+            <label = for"">Sensor X</label>
+            <input type="hidden"   name="sensorX"  value=False >
+            <input type="checkbox" name="sensorX"  value=True>
             <br>
-            <label = for"">Sensor 2</label>
-            <input type="hidden"   name="sensor2"  value="" >
-            <input type="checkbox" name="sensor2"  value="sensor2">
+            <label = for"">Sensor Y</label>
+            <input type="hidden"   name="sensorY"  value=False >
+            <input type="checkbox" name="sensorY"  value=True>
             <br>
-            <label = for"">Sensor 3</label>
-            <input type="hidden"   name="sensor3"  value="" >
-            <input type="checkbox" name="sensor3"  value="sensor3">
+            <label = for"">Sensor Z</label>
+            <input type="hidden"   name="sensorZ"  value=False >
+            <input type="checkbox" name="sensorZ"  value=True>
             <br>
             <button type = "submit">Sign Up</button>
         </form>   

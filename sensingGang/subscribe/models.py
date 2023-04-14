@@ -30,3 +30,8 @@ class Product(models.Model):
     def __str__(self):
         return f'{self.category} - {self.num_of_products}'
         
+class Subscriptions(models.Model):
+    username = models.CharField(max_length=255, null=False, blank=False)
+    sensorX = models.BooleanField(default=False)
+    sensorY = models.BooleanField(default=False)
+    sensorZ = models.BooleanField(default=False)
