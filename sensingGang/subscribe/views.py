@@ -39,6 +39,24 @@ def sensorList(request):
         }
     return render(request, 'subscribe/sensorList.html', context)
 
+def sensorRemove(request):
+    context = {
+        'userSensors': getUserSensors(request)
+    }
+    return render(request, 'subscribe/sensorRemove.html', context)
+
+def getUserSensors(request):
+    user = request.user
+    customerName = user.username
+    userSensors = []
+    subscribed =  Subscriptions.objects.filter(username=customerName)
+    for sub in subscribed:
+        if(sub.sensorX): userSensors.append('sensorX')
+        if(sub.sensorY): userSensors.append('sensorY')
+        if(sub.sensorZ): userSensors.append('sensorZ')
+    print(userSensors)
+    return userSensors
+        
 #on_message is callback function for receiving data as a subscriber
 #stores data in data structures and database
 def on_message(client, userdata, message):
