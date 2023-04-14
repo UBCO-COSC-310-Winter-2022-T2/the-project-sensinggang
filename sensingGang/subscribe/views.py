@@ -203,18 +203,15 @@ def index(request):
         'dataX': dataX, 'dataY' : dataY, 'dataZ' : dataZ
     }
     # return render(request, 'homePage/homePageTemplate.html', context)
-    return render(request, 'index.html', context)
+    return render(request, 'homePage/homePageTemplate.html', context)
 
 def subscribeForm(request):
+    # get user information from logged in User object
     user = request.user
-    # user_attributes = {
-    #     'username': user.username
-    # }
     customername = user.username
     
+    # get subscribed sensor from sensor form
     sensors = request.POST['sensors']
-    # sensorY = request.POST['sensorY']
-    # sensorZ = request.POST['sensorZ']
     
     # Try to get an instance of MyModel with a specific name
     obj, created = Subscriptions.objects.get_or_create(username=customername)
@@ -236,8 +233,31 @@ def subscribeForm(request):
     # save the changes
     obj.save()
     results = Subscriptions.objects.filter(username=customername)
+    
+    # get data from sensor database and send in context
+    dataX = Entry2.objects.filter(topic="sensorX")
+    dataY = Entry2.objects.filter(topic="sensorY")
+    dataZ = Entry2.objects.filter(topic="sensorZ")
+    
+    # update the context
     context = {
-        'results': results,
+        'results': results, 'dataX': dataX, 'dataY' : dataY, 'dataZ' : dataZ
     }
     return render(request, 'homePage/homePageTemplate.html', context)
 
+def show_data(request):
+    # get user based on current logged in user
+    user = request.user
+    
+    # get data parameters from User object and database
+    customername = user.username
+    dataX = Entry2.objects.filter(topic="sensorX")
+    dataY = Entry2.objects.filter(topic="sensorY")
+    dataZ = Entry2.objects.filter(topic="sensorZ")
+    results = Subscriptions.objects.filter(username=customername)
+    
+    # append the data to the conext
+    context = {
+        'results': results, 'dataX': dataX, 'dataY' : dataY, 'dataZ' : dataZ
+        }
+    return context
