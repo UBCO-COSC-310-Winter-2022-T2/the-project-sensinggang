@@ -52,7 +52,8 @@ def unsubscribeForm(request):
     if(sensors=="sensorZ"):
         obj.sensorZ=False
     obj.save()
-    return render(request, 'homePage/homePageTemplate.html')
+    context = show_data(request)
+    return render(request, 'homePage/homePageTemplate.html', context)
 
 
 #on_message is callback function for receiving data as a subscriber
