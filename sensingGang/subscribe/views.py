@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from users.views import *
 
 #variables to transfer data
-mqtt_data_list1 = [] # define the list to store the MQTT data sensor 1
+mqtt_data_list1 = [] # define the list to store the MQTT data sensor 1e
 mqtt_data_list2 = [] # define the list to store the MQTT data sensor 2
 mqtt_data_list3 = [] # define the list to store the MQTT data sensor 3
 received_messages = [] # define the list to store the MQTT data
@@ -192,10 +192,17 @@ def data_display_test(request):
 
 def index(request):
     generate_data()
-    entries = Entry2.objects.all()
+    dataX = Entry2.objects.filter(topic="sensorX")
+    dataY = Entry2.objects.filter(topic="sensorY")
+    dataZ = Entry2.objects.filter(topic="sensorZ")
+    # context = {
+    #     'dataX': results,
+    # }
+    # entries = Entry2.objects.all()
     context = {
-        'entries': entries,
+        'dataX': dataX, 'dataY' : dataY, 'dataZ' : dataZ
     }
+    # return render(request, 'homePage/homePageTemplate.html', context)
     return render(request, 'index.html', context)
 
 def subscribeForm(request):

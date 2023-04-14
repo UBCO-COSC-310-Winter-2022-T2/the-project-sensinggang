@@ -88,10 +88,10 @@
                     myChart = new Chart(ctx, {
                         type: type,
                         data: {
-                            labels: [{% for x in entries %}  '{{ x.topic }}',  {% endfor %}],
+                            labels: [{% for x in dataX %}  '{{ x.pub_date }}',  {% endfor %}],
                             datasets: [{
                                 label: '# of iot sensor products',
-                                data: [{% for x in entries %}  {{ x.data }},  {% endfor %}],
+                                data: [{% for x in dataX %}  {{ x.data }},  {% endfor %}],
                                 backgroundColor: [
                                     'rgba(255, 99, 132, 0.8)',
                                     'rgba(54, 162, 235, 0.8)',
