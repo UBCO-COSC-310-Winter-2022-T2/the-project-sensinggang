@@ -14,17 +14,13 @@
     {% for subscription in results %}
     {% if subscription.sensorX %}
     <div class="item">
-        Display sensor X chart
         <div class="col-md-4">
-            <h4>Select Chart Type:</h4>
             <select id="chartType1" class="form-select">
                 <option value="line" selected>Line Chart</option>
                 <option value="bar">Bar Chart</option>
                 <option value="pie">Pie Chart</option>
                 <option value="radar">Radar Chart</option>
                 <option value="doughnut">Doughnut Chart</option>
-
-
             </select>
         </div>
 
@@ -91,9 +87,7 @@
     {% endif %}
     {% if subscription.sensorY %} 
     <div class="item">
-        Display sensor Y chart
         <div class="col-md-4">
-            <h4>Select Chart Type:</h4>
             <select id="chartType2" class="form-select">
                 <option value="line" selected>Line Chart</option>
                 <option value="bar">Bar Chart</option>
@@ -168,9 +162,7 @@
     {% endif %}
     {% if subscription.sensorZ %}
     <div class="item">
-        Display sensor Z chart
         <div class="col-md-4">
-            <h4>Select Chart Type:</h4>
             <select id="chartType3" class="form-select">
                 <option value="line" selected>Line Chart</option>
                 <option value="bar">Bar Chart</option>
