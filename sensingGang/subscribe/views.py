@@ -196,7 +196,7 @@ def index(request):
     context = {
         'entries': entries,
     }
-    return render(request, 'index.html', context)
+    return render(request, 'homePage/homePageTemplate.html', context)
 
 def subscribeForm(request):
     user = request.user
