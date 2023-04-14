@@ -41,7 +41,7 @@
                     myChart1 = new Chart(ctx, {
                         type: type1,
                         data: {
-                            labels: [{% for x in dataX %}  '{{ x.pub_date }}',  {% endfor %}],
+                            labels: [{% for x in dataX %}  '{{ x.pub_date|date:'H:i:s, F j, Y' }}',  {% endfor %}],
                             datasets: [{
                                 label: 'Sensor X',
                                 data: [{% for x in dataX %}  {{ x.data }},  {% endfor %}],
@@ -118,7 +118,7 @@
                     myChart2 = new Chart(ctx, {
                         type: type2,
                         data: {
-                            labels: [{% for x in dataY %}  '{{ x.pub_date }}',  {% endfor %}],
+                            labels: [{% for x in dataY %}  '{{ x.pub_date|date:'H:i:s, F j, Y'  }}',  {% endfor %}],
                             datasets: [{
                                 label: 'Sensor Y',
                                 data: [{% for x in dataY %}  {{ x.data }},  {% endfor %}],
@@ -195,7 +195,7 @@
                     myChart3 = new Chart(ctx, {
                         type: type3,
                         data: {
-                            labels: [{% for x in dataZ %}  '{{ x.pub_date }}',  {% endfor %}],
+                            labels: [{% for x in dataZ %}  '{{ x.pub_date|date:'H:i:s, F j, Y'  }}',  {% endfor %}],
                             datasets: [{
                                 label: 'Sensor Z',
                                 data: [{% for x in dataZ %}  {{ x.data }},  {% endfor %}],
