@@ -13,9 +13,47 @@ sensor_list = ["sensorX", "sensorY", "sensorZ"]
 
 def sensorList(request):
     context = {
-        'sensor_list': sensor_list
+        'sensor_list': getNotSubscribed(request)
         }
     return render(request, 'subscribe/sensorList.html', context)
+
+def sensorRemove(request):
+    context = {
+        'userSensors': getUserSensors(request)
+    }
+    return render(request, 'subscribe/sensorRemove.html', context)
+
+def getUserSensors(request):
+    user = request.user
+    customerName = user.username
+    userSensors = []
+    subscribed =  Subscriptions.objects.filter(username=customerName)
+    for sub in subscribed:
+        if(sub.sensorX): userSensors.append('sensorX')
+        if(sub.sensorY): userSensors.append('sensorY')
+        if(sub.sensorZ): userSensors.append('sensorZ')
+    return userSensors
+
+def getNotSubscribed(request):
+    sensor_set = set(sensor_list)
+    userSensor_set = set(getUserSensors(request))
+    return list(sensor_set.symmetric_difference(userSensor_set))
+
+def unsubscribeForm(request):
+    user = request.user
+    customername = user.username
+    sensors = request.POST['sensors']
+
+    obj = Subscriptions.objects.get(username=customername)
+    if(sensors=="sensorX"):
+        obj.sensorX=False
+    if(sensors=="sensorY"):
+        obj.sensorY=False
+    if(sensors=="sensorZ"):
+        obj.sensorZ=False
+    obj.save()
+    return render(request, 'homePage/homePageTemplate.html')
+
 
 #on_message is callback function for receiving data as a subscriber
 #stores data in data structures and database

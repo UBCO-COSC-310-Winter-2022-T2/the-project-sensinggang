@@ -31,6 +31,7 @@
     {% endif %}
         <h1 id="logo">Sensing Gang</h1>
         {% if user.is_authenticated %}
+        <li><a href="{% url 'sensorRemove' %}">Remove Sensor</a></li>
         <li><a href="{% url 'sensorList' %}">Add Sensor</a></li>
         {% endif %}
         <li><a href="{% url 'homePage' %}">Home</a></li>
