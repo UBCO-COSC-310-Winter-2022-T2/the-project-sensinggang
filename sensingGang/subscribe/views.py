@@ -50,10 +50,22 @@ def on_message(client, userdata, message):
     entry = Entry2(topic=message.topic, data=message.payload.decode(), pub_date=datetime.datetime.now())
     entry.save()
     
+    
     print("message received " ,str(message.payload.decode("utf-8")))
     print("message topic=",message.topic)
     print("message qos=",message.qos)
     print("message retain flag=",message.retain)
+#display time
+# def display_time(pub_date):
+#     return pub_date.strftime('%H:%M:%S')
+
+# def display_data(request):
+#     entries = Entry2.objects.all()
+#     data = []
+#     for entry in entries:
+#         data.append((entry.topic, entry.data, display_time(entry.pub_date)))
+#     context = {'data': data}
+#     return render(request, 'index.html', context)
 
 def init_client(client_name):
     client = mqtt.Client(client_name) #create new client instance
