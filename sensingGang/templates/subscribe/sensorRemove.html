@@ -17,7 +17,7 @@
         </div>
       {% endfor %}
 
-        <form action="subscribeForm" method="post">
+        <form action="unsubscribeForm" method="post">
              {% csrf_token %}
             <select id="sensors" name="sensors">
               {% for sensors in userSensors %}

@@ -54,9 +54,28 @@ def getUserSensors(request):
         if(sub.sensorX): userSensors.append('sensorX')
         if(sub.sensorY): userSensors.append('sensorY')
         if(sub.sensorZ): userSensors.append('sensorZ')
-    print(userSensors)
     return userSensors
-        
+
+def unsubscribeForm(request):
+    user = request.user
+    customername = user.username
+    sensors = request.POST['sensors']
+
+    obj = Subscriptions.objects.get(username=customername)
+    print('Print obj')
+    print(obj)
+    print('Print obj.sensorZ')
+    print(obj.sensorZ)
+    if(sensors=="sensorX"):
+        obj.sensorX=False
+    if(sensors=="sensorY"):
+        obj.sensorY=False
+    if(sensors=="sensorZ"):
+        obj.sensorZ=False
+    obj.save()
+    return render(request, 'homePage/homePageTemplate.html')
+
+
 #on_message is callback function for receiving data as a subscriber
 #stores data in data structures and database
 def on_message(client, userdata, message):
