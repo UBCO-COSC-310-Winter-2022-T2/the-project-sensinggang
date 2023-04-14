@@ -34,12 +34,12 @@
                 var ctx = document.getElementById('myChart1').getContext('2d');
                 var myChart1;
                 
-                function createChart(type) {
+                function createChart(type1) {
                     if(myChart1) {
                         myChart1.destroy();
                     }
                     myChart1 = new Chart(ctx, {
-                        type: type,
+                        type: type1,
                         data: {
                             labels: [{% for x in dataX %}  '{{ x.pub_date }}',  {% endfor %}],
                             datasets: [{
@@ -111,12 +111,12 @@
                 var ctx = document.getElementById('myChart2').getContext('2d');
                 var myChart2;
                 
-                function createChart(type) {
+                function createChart(type2) {
                     if(myChart2) {
                         myChart2.destroy();
                     }
                     myChart2 = new Chart(ctx, {
-                        type: type,
+                        type: type2,
                         data: {
                             labels: [{% for x in dataY %}  '{{ x.pub_date }}',  {% endfor %}],
                             datasets: [{
@@ -188,12 +188,12 @@
                 var ctx = document.getElementById('myChart3').getContext('2d');
                 var myChart3;
                 
-                function createChart(type) {
+                function createChart(type3) {
                     if(myChart3) {
                         myChart3.destroy();
                     }
                     myChart3 = new Chart(ctx, {
-                        type: type,
+                        type: type3,
                         data: {
                             labels: [{% for x in dataZ %}  '{{ x.pub_date }}',  {% endfor %}],
                             datasets: [{
@@ -245,6 +245,9 @@
     {% endif %}
 </div> 
 {% endfor %}
+</div>
+<div class="item">
+    <span> 4 <a href="{% url 'button' %}"><button>Get Live Update!</button></a></span>
 </div>
 </div>  
 {% else %}
