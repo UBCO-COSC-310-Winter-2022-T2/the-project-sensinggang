@@ -3,21 +3,17 @@
 
 {% load static %}
 {% block style %}
-<link rel="" href="">
+<link rel="stylesheet" href="{% static 'homePageTemplate.css' %}">
 {% endblock style %}
 
 {% block content %}
         
-        <h3>Sign Up</h3>
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-          <strong>Message: </strong> {{ message }}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class = "messages">
+          {{ message }}
         </div>
-      {% endfor %}
-
+        {% endfor %}
+        <div class = "form">
         <form action="/signup" method="post">
              {% csrf_token %}
             <label = for"">Username</label>
@@ -34,6 +30,6 @@
             <input type = "password"  id = "confirmPassword" name = 'confirmPassword' placeholder = "Confirm Password">
             <button type = "submit">Sign Up</button>
         </form>   
-        
+      </div>
         <script src="" async defer></script>
 {% endblock content %}

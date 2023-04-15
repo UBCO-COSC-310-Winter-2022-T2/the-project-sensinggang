@@ -7,5 +7,4 @@ urlpatterns = [
     path('sensorRemove', views.sensorRemove, name='sensorRemove'),    
     path('subscribeForm', views.subscribeForm, name='subscribeForm'),
     path('unsubscribeForm', views.unsubscribeForm, name='unsubscribeForm'),
-
 ]
